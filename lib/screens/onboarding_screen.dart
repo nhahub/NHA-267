@@ -1,7 +1,8 @@
+import 'package:depi_graduation_project/features/ui/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../utils/constants.dart';
-import 'home_screen.dart';
+
 import '../core/models/onboarding_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // 💡 إضافة ScreenUtil
 
@@ -130,7 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               onPressed: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => const HomeScreenPlaceholder(),
+                    builder: (context) => LoginScreen(),
                   ),
                 );
               },
@@ -179,7 +180,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           if (_currentPageIndex == onboardingData.length - 1) {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (context) => const HomeScreenPlaceholder(),
+                                builder: (context) => LoginScreen(),
                               ),
                             );
                           } else {

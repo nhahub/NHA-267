@@ -6,7 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'features/ui/auth/login/login_screen.dart';
 import 'core/cache/SharedPreference.dart';
 import 'core/utils/app_routes.dart';
-import 'core/utils/constants.dart';
+import 'utils/constants.dart';
 import 'screens/splash_screen.dart'; // شاشتك للبداية
 
 void main() async {
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
           // 💡 اتجاه النصوص داخل التطبيق (شمال)
           builder: (context, widget) {
             return Directionality(
-              textDirection: TextDirection.ltr,
+              textDirection: TextDirection.rtl, // ← هنا كل النصوص هتبقى على الشمال
               child: widget!,
             );
           },
