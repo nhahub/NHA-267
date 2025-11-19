@@ -104,12 +104,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
 
-                            InkWell(
-                              onTap: () {},
-                              child: Text(
-                                'نسيت كلمة المرور',
-                                style: AppStyles.regular16Text,
-                                textAlign: TextAlign.end,
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: InkWell(
+                                onTap: () {},
+                                child: Text(
+                                  'نسيت كلمة المرور',
+                                  style: AppStyles.medium18White,
+                                  textAlign: TextAlign.end,
+                                ),
                               ),
                             ),
 
