@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_localizations/flutter_localizations.dart'; // 1. تأكد إن المكتبة دي معمولة في pubspec.yaml
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'features/ui/auth/login/login_screen.dart';
 import 'core/cache/SharedPreference.dart';
-// import 'DI/DI.dart'; // لو لسه مش شغال، سيبه كومنت
 import 'core/utils/app_routes.dart';
-// import 'core/utils/app_theme.dart';
+import 'core/utils/constants.dart';
+import 'screens/splash_screen.dart'; // شاشتك للبداية
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // حماية شاشة الإطلاق الأصلية حتى يكتمل تحميل Flutter
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await SharedPreferenceUtils.init();
   // await configureDependencies();
+
   runApp(const MyApp());
 }
 
@@ -27,27 +33,50 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'تطبيق الإيجار',
+          title: 'تطبيق الإيجار القديم',
 
-          // 2. هنا بنحدد اللغة اللي هيبدأ بيها (عربي)
+          // 💡 تطبيق الثيم والخطوط
+          theme: ThemeData(
+            primaryColor: kPrimaryColor,
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.blue,
+            ).copyWith(
+              secondary: kPrimaryColor,
+            ),
+            fontFamily: 'Inter',
+            useMaterial3: true,
+          ),
+
+          // 💡 اللغة الأساسية عربية
           locale: const Locale('ar'),
 
-          // 3. (الجزء الناقص عندك) المندوبين المسؤولين عن الترجمة والاتجاهات
+          // 💡 المندوبين المسؤولين عن الترجمة والاتجاه
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
 
-          // 4. (الجزء الناقص عندك) اللغات المدعومة في التطبيق
+          // 💡 اللغات المدعومة
           supportedLocales: const [
-            Locale('en'), // English
-            Locale('ar'), // Arabic
+            Locale('en'),
+            Locale('ar'),
           ],
 
-          initialRoute: AppRoutes.loginRoute,
+          // 💡 اتجاه النصوص داخل التطبيق (شمال)
+          builder: (context, widget) {
+            return Directionality(
+              textDirection: TextDirection.ltr,
+              child: widget!,
+            );
+          },
+
+          // 💡 نقطة البداية هي SplashScreen
+          home: const SplashScreen(),
+
+          // 💡 إعداد الـ Routes للتنقل
           routes: {
-            AppRoutes.loginRoute: (context) => LoginScreen(),
+            AppRoutes.loginRoute: (context) => const LoginScreen(),
           },
         );
       },
