@@ -1,29 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // (1. عشان المقاسات)
-import 'package:flutter_native_splash/flutter_native_splash.dart'; // (لإدارة شاشة الإطلاق الأصلية)
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-// (2. إمبورت للملفات الأساسية اللي اتفقنا عليها)
-// (متخافش لو عملوا إيرور مؤقت، ده طبيعي)
+import 'features/ui/auth/login/login_screen.dart';
 import 'core/cache/SharedPreference.dart';
-import 'DI/DI.dart';
 import 'core/utils/app_routes.dart';
-import 'core/utils/app_theme.dart';
-import 'screens/splash_screen.dart'; // (💡 شاشة البداية التي عملنا عليها)
-import 'utils/constants.dart'; // (💡 الثوابت التي تحتوي على kPrimaryColor)
-
-// (3. إمبورت للشاشات)
-import 'features/ui/auth/login/logIn_screen.dart';
-
+import 'core/utils/constants.dart';
+import 'screens/splash_screen.dart'; // شاشتك للبداية
 
 void main() async {
-  // (4. دالة main "النضيفة")
-  // 💡 يجب تهيئة WidgetsBinding أولا
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  // 💡 حماية شاشة الإطلاق الأصلية حتى يتم تحميل محرك Flutter
+  // حماية شاشة الإطلاق الأصلية حتى يكتمل تحميل Flutter
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // (تشغيل الـ Cache والـ DI قبل ما التطبيق يفتح)
   await SharedPreferenceUtils.init();
   // await configureDependencies();
 
@@ -35,19 +26,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // (5. تغليف التطبيق بـ ScreenUtilInit)
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-
-        // (6. الـ MaterialApp النضيف)
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'دليلك للإيجار',
+          title: 'تطبيق الإيجار القديم',
 
-          // 💡 تطبيق الثيم وإعداد الخطوط
+          // 💡 تطبيق الثيم والخطوط
           theme: ThemeData(
             primaryColor: kPrimaryColor,
             colorScheme: ColorScheme.fromSwatch(
@@ -55,24 +43,40 @@ class MyApp extends StatelessWidget {
             ).copyWith(
               secondary: kPrimaryColor,
             ),
-            fontFamily: 'Inter', // الخط الذي اتفقنا عليه
+            fontFamily: 'Inter',
             useMaterial3: true,
           ),
 
-          // 💡 تحديد اتجاه النص (RTL) للغة العربية
+          // 💡 اللغة الأساسية عربية
+          locale: const Locale('ar'),
+
+          // 💡 المندوبين المسؤولين عن الترجمة والاتجاه
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+
+          // 💡 اللغات المدعومة
+          supportedLocales: const [
+            Locale('en'),
+            Locale('ar'),
+          ],
+
+          // 💡 اتجاه النصوص داخل التطبيق (شمال)
           builder: (context, widget) {
             return Directionality(
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirection.ltr,
               child: widget!,
             );
           },
 
-          // 💡 نقطة الانطلاق هي شاشة البداية (SplashScreen) لاستكمال الحركة
+          // 💡 نقطة البداية هي SplashScreen
           home: const SplashScreen(),
 
+          // 💡 إعداد الـ Routes للتنقل
           routes: {
-            //AppRoutes.loginRoute: (context) => LoginScreen(),
-            // (ضيف هنا باقي الشاشات لما تعملها)
+            AppRoutes.loginRoute: (context) => const LoginScreen(),
           },
         );
       },
