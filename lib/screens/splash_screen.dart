@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart'; // 💡 استيراد ضروري
 import '../utils/constants.dart';
 import 'onboarding_screen.dart';
 
@@ -16,8 +17,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
+    // 💡 إخفاء شاشة الإطلاق الأصلية فوراً بمجرد ظهور شاشة Flutter
+    FlutterNativeSplash.remove();
+
     // 1. بدء حركة تغيير اللون وحجم اللوجو
-    Future.delayed(const Duration(milliseconds: 500), () {
+    // (تم تقليل المدة لـ 100ms للبدء فور إزالة الشاشة الأصلية)
+    Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
         setState(() {
           _isAnimated = true;
@@ -48,6 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return AnimatedContainer(
       duration: kAnimationDuration,
       curve: Curves.easeInOut,
+      // الخلفية تتغير من الأبيض إلى الأزرق
       color: _isAnimated ? kPrimaryColor : Colors.white,
 
       // 💡 الحل النهائي: نغلف المحتوى بـ SafeArea
@@ -68,11 +74,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     height: _isAnimated ? 140 : 80,
                     width: _isAnimated ? 140 : 80,
 
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.contain,
-                      ),
+                    child: Image.asset(
+                      'assets/images/splash.png',
+                      fit: BoxFit.contain,
                     ),
                   ),
 
@@ -82,6 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Text(
                     'دليلك للإيجار',
                     style: TextStyle(
+                      // 💡 تغيير لون النص ديناميكياً
                       color: _isAnimated ? Colors.white : kPrimaryColor,
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
