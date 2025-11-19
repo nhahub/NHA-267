@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // (1. عشان المقاسات)
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'; // 1. تأكد إن المكتبة دي معمولة في pubspec.yaml
 
-// (2. إمبورت للملفات الأساسية اللي اتفقنا عليها)
-// (متخافش لو عملوا إيرور مؤقت، ده طبيعي)
+import 'features/ui/auth/login/login_screen.dart';
 import 'core/cache/SharedPreference.dart';
-import 'DI/DI.dart';
+// import 'DI/DI.dart'; // لو لسه مش شغال، سيبه كومنت
 import 'core/utils/app_routes.dart';
-import 'core/utils/app_theme.dart';
-
-// (3. إمبورت للشاشات - هيعمل إيرور مؤقت لحد ما ننشئها)
-import 'features/ui/auth/login/logIn_screen.dart';
-
+// import 'core/utils/app_theme.dart';
 
 void main() async {
-  // (4. دالة main "النضيفة" اللي اتفقنا عليها)
   WidgetsFlutterBinding.ensureInitialized();
-
-  // (تشغيل الـ Cache والـ DI قبل ما التطبيق يفتح)
   await SharedPreferenceUtils.init();
   // await configureDependencies();
-
   runApp(const MyApp());
 }
 
@@ -28,22 +20,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // (5. تغليف التطبيق بـ ScreenUtilInit)
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-
-        // (6. الـ MaterialApp النضيف)
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'تطبيق الإيجار',
-          //initialRoute: AppRoutes.loginRoute,
 
+          // 2. هنا بنحدد اللغة اللي هيبدأ بيها (عربي)
+          locale: const Locale('ar'),
+
+          // 3. (الجزء الناقص عندك) المندوبين المسؤولين عن الترجمة والاتجاهات
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+
+          // 4. (الجزء الناقص عندك) اللغات المدعومة في التطبيق
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('ar'), // Arabic
+          ],
+
+          initialRoute: AppRoutes.loginRoute,
           routes: {
-            //AppRoutes.loginRoute: (context) => LoginScreen(),
-            // (ضيف هنا باقي الشاشات لما تعملها)
+            AppRoutes.loginRoute: (context) => LoginScreen(),
           },
         );
       },
