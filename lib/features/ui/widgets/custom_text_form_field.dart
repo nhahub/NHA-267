@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/utils/app_colors.dart';
 
 class CustomTextFormField extends StatefulWidget {
+class CustomTextFormField extends StatelessWidget {
   final Color? filledColor;
   final Color borderColor;
   final TextStyle? hintStyle;
@@ -16,6 +17,8 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final bool isObscureText; // دي القيمة الابتدائية بس
   final bool isPassword;    // عشان نعرف هل نظهر زرار العين ولا لأ
+  final bool isObscureText;
+  final bool isPassword;
   final TextStyle? textStyle;
   final bool readonly;
 
@@ -86,20 +89,38 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             ),
           )
               : widget.suffixIcon,
+        style: textStyle ?? TextStyle(fontSize: 16.sp, color: AppColors.blackColor),
+        obscureText: isObscureText,
+        keyboardType: keyboardType,
+        controller: controller,
+        validator: validator,
+        readOnly: readonly,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: filledColor,
+          hintText: hintText,
+          hintStyle: hintStyle,
+          label: label,
+          labelStyle: labelStyle,
+          prefixIcon: prefixIcon,
+          // 💡 نستخدم suffixIcon كما تم تمريره من LoginScreen (سواء كان زر الإظهار أو أيقونة أخرى)
+          suffixIcon: isPassword ? suffixIcon : suffixIcon,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: widget.borderColor, width: 1),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide(color: borderColor, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: widget.borderColor, width: 1),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
           ),
           errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               borderSide: const BorderSide(color: AppColors.redColor)),
           focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: AppColors.redColor)),
+              borderRadius: BorderRadius.circular(16.r),
+              borderSide: const BorderSide(color: AppColors.redColor, width: 2)),
         ),
       ),
     );

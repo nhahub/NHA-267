@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/app_styles.dart';
+import '../../../../core/utils/app_validators.dart'; // 💡 تم إضافة استيراد ملف Validators
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 
@@ -18,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // شلنا متغير isPasswordVisible لأنه مبقاش ليه لازمة هنا
 
@@ -29,14 +31,22 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              // اللوجو في الأعلى (مساحة محجوزة له)
               Padding(
                 padding: EdgeInsets.only(
                   top: 91.h,
                   bottom: 87.h,
-                  left: 97.w,
-                  right: 97.w,
                 ),
-                // child: Image.asset(AppAssets.appBarLeading),
+                child: SizedBox(
+                  height: 120.h,
+                  width: 120.w,
+                  child: Image.asset(
+                    'assets/images/logo.png', // مسار اللوجو
+                    color: AppColors.whiteColor, // تلوين اللوجو بالأبيض للخلفية الزرقاء
+                    colorBlendMode: BlendMode.srcIn,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
 
               Padding(
@@ -44,20 +54,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AutoSizeText(
-                      'اهلا بيك',
-                      style: AppStyles.semi24White,
-                      maxLines: 1,
+                    Center(
+                      child: AutoSizeText(
+                        'اهلا بيك',
+                        style: AppStyles.semi24White,
+                        maxLines: 1,
+                      ),
                     ),
                     AutoSizeText(
                       'سجّل دخولك لمتابعة جميع القوانين ',
                       style: AppStyles.regular16Text,
                       maxLines: 1,
+                    Center(
+                      child: AutoSizeText(
+                        'سجّل دخولك لمتابعة جميع القوانين ',
+                        style: AppStyles.light16White,
+                        maxLines: 1,
+                      ),
                     ),
 
                     Padding(
                       padding: EdgeInsets.only(top: 40.h),
                       child: Form(
+                        key: _formKey, // ربط الـ Form Key
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -79,6 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                                 return null;
                               },
+                              // 💡 استخدام AppValidators.validateUsername
+                              validator: AppValidators.validateUsername,
                             ),
 
                             Text(
@@ -110,6 +131,34 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'نسيت كلمة المرور',
                                 style: AppStyles.regular16Text,
                                 textAlign: TextAlign.end,
+                              // 💡 استخدام AppValidators.validatePassword
+                              validator: AppValidators.validatePassword,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isPasswordVisible = !isPasswordVisible;
+                                  });
+                                },
+                                icon: Icon(
+                                  isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: AppColors.hintTextColor,
+                                ),
+                              ),
+                            ),
+
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: InkWell(
+                                onTap: () {
+                                  // 💡 navigate to forgot password screen
+                                },
+                                child: Text(
+                                  'نسيت كلمة المرور',
+                                  style: AppStyles.medium18White,
+                                  textAlign: TextAlign.end,
+                                ),
                               ),
                             ),
 
@@ -122,6 +171,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () {
                                   // هنا ممكن تعمل الفاليديشن وتستدعي الـ Cubit/Bloc
                                   print("تسجيل الدخول: ${userNameController.text}");
+                                  // تحقق من الـ Form Key قبل محاولة تسجيل الدخول
+                                  if (_formKey.currentState!.validate()) {
+                                    // قم ببدء عملية تسجيل الدخول هنا
+                                    print("Valid form. Attempting login...");
+                                  }
                                 },
                               ),
                             ),
@@ -130,9 +184,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               padding: EdgeInsets.only(top: 30.h),
                               child: GestureDetector(
                                 onTap: () {
+                                  // التنقل إلى شاشة التسجيل
                                   Navigator.pushReplacementNamed(
                                     context,
-                                    AppRoutes.registerRoute,
+                                    AppRoutes.registerRoute, // يجب تعريف هذا المسار في app_routes.dart
                                   );
                                 },
                                 child: Row(
