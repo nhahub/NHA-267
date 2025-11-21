@@ -1,3 +1,4 @@
+import 'package:depi_graduation_project/features/ui/auth/register/registerScreenStates/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -64,7 +65,8 @@ class MyApp extends StatelessWidget {
 
           routes: {
             AppRoutes.loginRoute: (context) => const LoginScreen(),
-            // AppRoutes.registerRoute: (context) => const RegisterScreen(),
+            AppRoutes.registerRoute: (context) => const RegisterScreen(),
+            
           },
         );
       },

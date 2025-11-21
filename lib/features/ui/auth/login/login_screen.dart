@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool isPasswordVisible = false;
+  // شلنا متغير isPasswordVisible لأنه مبقاش ليه لازمة هنا
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         maxLines: 1,
                       ),
                     ),
+                    AutoSizeText(
+                      'سجّل دخولك لمتابعة جميع القوانين ',
+                      style: AppStyles.regular16Text,
+                      maxLines: 1,
                     Center(
                       child: AutoSizeText(
                         'سجّل دخولك لمتابعة جميع القوانين ',
@@ -83,11 +87,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             CustomTextFormField(
                               isPassword: false,
                               keyboardType: TextInputType.text,
-                              isObscureText: false,
+                              // isObscureText: false, // مش محتاجين نكتبها لأن الديفولت بتاعها false
                               hintText: "اكتب اسمك هنا",
                               hintStyle: AppStyles.light18HintText,
                               filledColor: AppColors.whiteColor,
                               controller: userNameController,
+                              validator: (text) {
+                                if (text == null || text.trim().isEmpty) {
+                                  return 'من فضلك ادخل اسم المستخدم';
+                                }
+                                return null;
+                              },
                               // 💡 استخدام AppValidators.validateUsername
                               validator: AppValidators.validateUsername,
                             ),
@@ -96,14 +106,31 @@ class _LoginScreenState extends State<LoginScreen> {
                               "كلمة المرور",
                               style: AppStyles.medium18White,
                             ),
+                            // التعديل هنا: شلنا الـ suffixIcon والـ setState
                             CustomTextFormField(
-                              isPassword: true,
+                              isPassword: true,      // ده هيشغل زرار العين تلقائي
+                              isObscureText: true,   // ده هيخلي النص يبدأ مخفي
                               keyboardType: TextInputType.visiblePassword,
-                              isObscureText: !isPasswordVisible,
                               hintText: "اكتب كلمة المرور",
                               hintStyle: AppStyles.light18HintText,
                               filledColor: AppColors.whiteColor,
                               controller: passwordController,
+                              validator: (text) {
+                                if (text == null || text.trim().isEmpty) {
+                                  return 'من فضلك ادخل كلمة المرور';
+                                }
+                                return null;
+                              },
+                            ),
+
+                            InkWell(
+                              onTap: () {
+                                // كود نسيان كلمة المرور
+                              },
+                              child: Text(
+                                'نسيت كلمة المرور',
+                                style: AppStyles.regular16Text,
+                                textAlign: TextAlign.end,
                               // 💡 استخدام AppValidators.validatePassword
                               validator: AppValidators.validatePassword,
                               suffixIcon: IconButton(
@@ -142,6 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 textStyle: AppStyles.semi20Primary,
                                 text: "تسجيل الدخول",
                                 onPressed: () {
+                                  // هنا ممكن تعمل الفاليديشن وتستدعي الـ Cubit/Bloc
+                                  print("تسجيل الدخول: ${userNameController.text}");
                                   // تحقق من الـ Form Key قبل محاولة تسجيل الدخول
                                   if (_formKey.currentState!.validate()) {
                                     // قم ببدء عملية تسجيل الدخول هنا
@@ -164,12 +193,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: Text(
-                                        ' لا تملك حساب؟ أنشئ حساب جديد',
-                                        style: AppStyles.medium18White,
-                                        textAlign: TextAlign.center,
+                                      child: Text.rich(
+                                TextSpan(
+                                children: [
+                                TextSpan(
+                                text: 'لا تملك حساب؟ ',
+                                  style: AppStyles.medium18White, // الستايل العادي بدون خط
+                                ),
+                                TextSpan(
+                                  text: 'أنشئ حساب جديد',
+                                  style: AppStyles.medium18White.copyWith(
+                                    decoration: TextDecoration.underline, // الخط هنا بس
+                                    decorationColor: Colors.white,
+                                    fontWeight: FontWeight.bold, // ممكن تخليه عريض كمان عشان يبرز
+                                  ),
+                                ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                                        ,
+
                                       ),
-                                    ),
+
                                   ],
                                 ),
                               ),
