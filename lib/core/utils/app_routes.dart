@@ -1,6 +1,6 @@
-class AppRoutes{
-
-  static String homeRoute = "home";
-  static String loginRoute="login";
-  static String registerRoute ="register";
+class AppRoutes {
+  static const String loginRoute = '/login';
+  static const String registerRoute = '/register';
+  static const String homeRoute = '/home';
+// يمكنك إضافة المزيد من المسارات هنا
 }

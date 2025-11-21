@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  String text;
-  Color backgroundColor;
-  TextStyle textStyle;
-  void Function()? onPressed;
+  final String text;
+  final Color backgroundColor;
+  final TextStyle textStyle;
+  final void Function()? onPressed;
 
-  CustomElevatedButton(
+  const CustomElevatedButton(
       {super.key,
         required this.text,
         required this.onPressed,
@@ -20,6 +20,7 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        // إزالة العرض الثابت هنا للسماح له بالتكيف
         padding: EdgeInsets.symmetric(horizontal: 1.w),
         backgroundColor: backgroundColor,
         shape: RoundedRectangleBorder(
@@ -28,9 +29,10 @@ class CustomElevatedButton extends StatelessWidget {
           ),
         ),
       ),
+      // 💡 استخدام SizedBox لتحديد الارتفاع المطلوب وضمان عرض كامل
       child: SizedBox(
         height: 64.h,
-        width: 398.w,
+        width: double.infinity, // 💡 تم التعديل ليأخذ العرض الكامل
         child: Center(
           child: AutoSizeText(text, style: textStyle),
         ),

@@ -79,22 +79,6 @@ class _SplashScreenState extends State<SplashScreen> {
                       fit: BoxFit.contain,
                     ),
                   ),
-
-                  const SizedBox(height: 24),
-
-                  // Arabic Text
-                  Text(
-                    'دليلك للإيجار',
-                    style: TextStyle(
-                      // 💡 تغيير لون النص ديناميكياً
-                      color: _isAnimated ? Colors.white : kPrimaryColor,
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                      height: 1.2,
-
-                    ),
-                  ),
                 ],
               ),
             ),
