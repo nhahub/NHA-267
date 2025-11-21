@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/utils/app_colors.dart';
 
 class CustomTextFormField extends StatefulWidget {
-class CustomTextFormField extends StatelessWidget {
   final Color? filledColor;
   final Color borderColor;
   final TextStyle? hintStyle;
@@ -15,10 +14,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
-  final bool isObscureText; // دي القيمة الابتدائية بس
-  final bool isPassword;    // عشان نعرف هل نظهر زرار العين ولا لأ
-  final bool isObscureText;
-  final bool isPassword;
+  final bool isObscureText; // الحالة الابتدائية
+  final bool isPassword;    // لتفعيل زر العين
   final TextStyle? textStyle;
   final bool readonly;
 
@@ -46,13 +43,13 @@ class CustomTextFormField extends StatelessWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  // متغير محلي للتحكم في الحالة جوه الـ Widget دي بس
+  // متغير محلي للتحكم في إظهار/إخفاء الباسورد
   bool _obscureText = false;
 
   @override
   void initState() {
     super.initState();
-    // أول ما الودجت تفتح، بناخد القيمة اللي جاية من برا
+    // نأخذ القيمة الابتدائية من الـ Widget
     _obscureText = widget.isObscureText;
   }
 
@@ -61,12 +58,15 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return Padding(
       padding: EdgeInsets.only(top: 12.h, bottom: 20.h),
       child: TextFormField(
-        style: widget.textStyle,
-        obscureText: _obscureText, // بنستخدم المتغير المحلي هنا
-        keyboardType: widget.keyboardType,
+        // الخصائص الأساسية
         controller: widget.controller,
         validator: widget.validator,
+        keyboardType: widget.keyboardType,
+        obscureText: _obscureText, // التحكم من خلال المتغير المحلي
         readOnly: widget.readonly,
+        style: widget.textStyle ?? TextStyle(fontSize: 16.sp, color: Colors.black),
+
+        // التنسيق (Decoration)
         decoration: InputDecoration(
           filled: true,
           fillColor: widget.filledColor,
@@ -75,52 +75,40 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           label: widget.label,
           labelStyle: widget.labelStyle,
           prefixIcon: widget.prefixIcon,
-          // لو هو باسورد، بنظهر الأيقونة، ولو مش باسورد بنشوف هل فيه suffixIcon مبعوت ولا لأ
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+
+          // منطق الأيقونة الجانبية (Suffix Icon)
           suffixIcon: widget.isPassword
               ? IconButton(
             onPressed: () {
               setState(() {
-                _obscureText = !_obscureText; // بنغير المتغير المحلي
+                _obscureText = !_obscureText;
               });
             },
             icon: Icon(
               _obscureText ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey, // لون مفضل للأيقونة
+              color: Colors.grey,
             ),
           )
-              : widget.suffixIcon,
-        style: textStyle ?? TextStyle(fontSize: 16.sp, color: AppColors.blackColor),
-        obscureText: isObscureText,
-        keyboardType: keyboardType,
-        controller: controller,
-        validator: validator,
-        readOnly: readonly,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: filledColor,
-          hintText: hintText,
-          hintStyle: hintStyle,
-          label: label,
-          labelStyle: labelStyle,
-          prefixIcon: prefixIcon,
-          // 💡 نستخدم suffixIcon كما تم تمريره من LoginScreen (سواء كان زر الإظهار أو أيقونة أخرى)
-          suffixIcon: isPassword ? suffixIcon : suffixIcon,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+              : widget.suffixIcon, // لو مش باسورد، اعرض الأيقونة العادية لو موجودة
 
+          // الحدود (Borders)
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.r),
-            borderSide: BorderSide(color: borderColor, width: 1),
+            borderSide: BorderSide(color: widget.borderColor, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.r),
-            borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
+            borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
           ),
           errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: const BorderSide(color: AppColors.redColor)),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(color: AppColors.redColor),
+          ),
           focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: const BorderSide(color: AppColors.redColor, width: 2)),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(color: AppColors.redColor, width: 2),
+          ),
         ),
       ),
     );

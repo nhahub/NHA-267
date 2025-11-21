@@ -2,10 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// تأكد من صحة المسارات حسب هيكلة مشروعك
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/app_styles.dart';
-import '../../../../core/utils/app_validators.dart'; // 💡 تم إضافة استيراد ملف Validators
+// import '../../../../core/utils/app_validators.dart'; // قم بإلغاء التعليق إذا كان الملف موجوداً
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 
@@ -17,11 +18,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // المتحكمات
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // شلنا متغير isPasswordVisible لأنه مبقاش ليه لازمة هنا
+  // مفتاح التحقق من الفورم
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +33,27 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // اللوجو في الأعلى (مساحة محجوزة له)
+              // 1. اللوجو والمساحة العلوية
               Padding(
                 padding: EdgeInsets.only(
-                  top: 91.h,
-                  bottom: 87.h,
+                  top: 60.h,
+                  bottom: 40.h,
                 ),
                 child: SizedBox(
                   height: 120.h,
                   width: 120.w,
-                  child: Image.asset(
-                    'assets/images/logo.png', // مسار اللوجو
-                    color: AppColors.whiteColor, // تلوين اللوجو بالأبيض للخلفية الزرقاء
-                    colorBlendMode: BlendMode.srcIn,
-                    fit: BoxFit.contain,
+                  child: Icon(
+                    Icons.gavel_rounded, // أيقونة قانونية مؤقتة بدلاً من الصورة
+                    size: 100,
+                    color: Colors.white,
                   ),
+                  // يمكنك استخدام الصورة بدلاً من الأيقونة كالتالي:
+                  // child: Image.asset(
+                  //   'assets/images/logo.png',
+                  //   color: AppColors.whiteColor,
+                  //   colorBlendMode: BlendMode.srcIn,
+                  //   fit: BoxFit.contain,
+                  // ),
                 ),
               ),
 
@@ -54,20 +62,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    // 2. نصوص الترحيب
                     Center(
                       child: AutoSizeText(
-                        'اهلا بيك',
+                        'أهلاً بك',
                         style: AppStyles.semi24White,
                         maxLines: 1,
                       ),
                     ),
-                    AutoSizeText(
-                      'سجّل دخولك لمتابعة جميع القوانين ',
-                      style: AppStyles.regular16Text,
-                      maxLines: 1,
+                    SizedBox(height: 8.h),
                     Center(
                       child: AutoSizeText(
-                        'سجّل دخولك لمتابعة جميع القوانين ',
+                        'سجّل دخولك لمتابعة جميع القوانين',
                         style: AppStyles.light16White,
                         maxLines: 1,
                       ),
@@ -76,92 +82,70 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: EdgeInsets.only(top: 40.h),
                       child: Form(
-                        key: _formKey, // ربط الـ Form Key
+                        key: _formKey, // ربط المفتاح هنا
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // 3. حقل اسم المستخدم
                             Text(
                               "اسم المستخدم",
                               style: AppStyles.medium18White,
                             ),
                             CustomTextFormField(
-                              isPassword: false,
-                              keyboardType: TextInputType.text,
-                              // isObscureText: false, // مش محتاجين نكتبها لأن الديفولت بتاعها false
-                              hintText: "اكتب اسمك هنا",
-                              hintStyle: AppStyles.light18HintText,
-                              filledColor: AppColors.whiteColor,
                               controller: userNameController,
+                              hintText: "اكتب اسمك هنا",
+                              keyboardType: TextInputType.text,
+                              filledColor: AppColors.whiteColor,
+                              // استخدم AppValidators.validateUsername إذا كان الملف موجوداً
+                              // validator: AppValidators.validateUsername,
                               validator: (text) {
                                 if (text == null || text.trim().isEmpty) {
                                   return 'من فضلك ادخل اسم المستخدم';
                                 }
                                 return null;
                               },
-                              // 💡 استخدام AppValidators.validateUsername
-                              validator: AppValidators.validateUsername,
                             ),
 
+                            // 4. حقل كلمة المرور
                             Text(
                               "كلمة المرور",
                               style: AppStyles.medium18White,
                             ),
-                            // التعديل هنا: شلنا الـ suffixIcon والـ setState
                             CustomTextFormField(
-                              isPassword: true,      // ده هيشغل زرار العين تلقائي
-                              isObscureText: true,   // ده هيخلي النص يبدأ مخفي
-                              keyboardType: TextInputType.visiblePassword,
-                              hintText: "اكتب كلمة المرور",
-                              hintStyle: AppStyles.light18HintText,
-                              filledColor: AppColors.whiteColor,
                               controller: passwordController,
+                              hintText: "اكتب كلمة المرور",
+                              isPassword: true,      // تفعيل زر العين
+                              isObscureText: true,   // إخفاء النص افتراضياً
+                              keyboardType: TextInputType.visiblePassword,
+                              filledColor: AppColors.whiteColor,
+                              // validator: AppValidators.validatePassword,
                               validator: (text) {
                                 if (text == null || text.trim().isEmpty) {
                                   return 'من فضلك ادخل كلمة المرور';
+                                }
+                                if (text.length < 6) {
+                                  return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
                                 }
                                 return null;
                               },
                             ),
 
-                            InkWell(
-                              onTap: () {
-                                // كود نسيان كلمة المرور
-                              },
-                              child: Text(
-                                'نسيت كلمة المرور',
-                                style: AppStyles.regular16Text,
-                                textAlign: TextAlign.end,
-                              // 💡 استخدام AppValidators.validatePassword
-                              validator: AppValidators.validatePassword,
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isPasswordVisible = !isPasswordVisible;
-                                  });
-                                },
-                                icon: Icon(
-                                  isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: AppColors.hintTextColor,
-                                ),
-                              ),
-                            ),
-
+                            // 5. رابط نسيان كلمة المرور
                             Align(
                               alignment: Alignment.centerLeft,
                               child: InkWell(
                                 onTap: () {
-                                  // 💡 navigate to forgot password screen
+                                  // الانتقال لصفحة نسيان كلمة المرور
                                 },
                                 child: Text(
-                                  'نسيت كلمة المرور',
-                                  style: AppStyles.medium18White,
+                                  'نسيت كلمة المرور؟',
+                                  style: AppStyles.medium18White.copyWith(fontSize: 14.sp),
                                   textAlign: TextAlign.end,
                                 ),
                               ),
                             ),
 
+                            // 6. زر تسجيل الدخول
                             Padding(
                               padding: EdgeInsets.only(top: 35.h),
                               child: CustomElevatedButton(
@@ -169,53 +153,47 @@ class _LoginScreenState extends State<LoginScreen> {
                                 textStyle: AppStyles.semi20Primary,
                                 text: "تسجيل الدخول",
                                 onPressed: () {
-                                  // هنا ممكن تعمل الفاليديشن وتستدعي الـ Cubit/Bloc
-                                  print("تسجيل الدخول: ${userNameController.text}");
-                                  // تحقق من الـ Form Key قبل محاولة تسجيل الدخول
+                                  // التحقق من صحة البيانات قبل الإرسال
                                   if (_formKey.currentState!.validate()) {
-                                    // قم ببدء عملية تسجيل الدخول هنا
-                                    print("Valid form. Attempting login...");
+                                    print("Valid form. Login: ${userNameController.text}");
+                                    // استدعاء الـ Bloc/Cubit هنا
                                   }
                                 },
                               ),
                             ),
 
+                            // 7. رابط إنشاء حساب جديد
                             Padding(
-                              padding: EdgeInsets.only(top: 30.h),
+                              padding: EdgeInsets.only(top: 30.h, bottom: 20.h),
                               child: GestureDetector(
                                 onTap: () {
-                                  // التنقل إلى شاشة التسجيل
                                   Navigator.pushReplacementNamed(
                                     context,
-                                    AppRoutes.registerRoute, // يجب تعريف هذا المسار في app_routes.dart
+                                    AppRoutes.registerRoute,
                                   );
                                 },
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Expanded(
-                                      child: Text.rich(
-                                TextSpan(
-                                children: [
-                                TextSpan(
-                                text: 'لا تملك حساب؟ ',
-                                  style: AppStyles.medium18White, // الستايل العادي بدون خط
-                                ),
-                                TextSpan(
-                                  text: 'أنشئ حساب جديد',
-                                  style: AppStyles.medium18White.copyWith(
-                                    decoration: TextDecoration.underline, // الخط هنا بس
-                                    decorationColor: Colors.white,
-                                    fontWeight: FontWeight.bold, // ممكن تخليه عريض كمان عشان يبرز
-                                  ),
-                                ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
-                            )
-                                        ,
-
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'لا تملك حساب؟ ',
+                                            style: AppStyles.medium18White,
+                                          ),
+                                          TextSpan(
+                                            text: 'أنشئ حساب جديد',
+                                            style: AppStyles.medium18White.copyWith(
+                                              decoration: TextDecoration.underline,
+                                              decorationColor: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ],
                                 ),
                               ),

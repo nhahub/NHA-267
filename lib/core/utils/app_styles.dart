@@ -11,10 +11,14 @@ class AppStyles {
       fontSize: 16.sp, fontWeight: FontWeight.w400, color: AppColors.fontColor);
 
   static TextStyle regular16Button = GoogleFonts.cairo(
-      fontSize: 16.sp, fontWeight: FontWeight.w400, color: AppColors.whiteColor);
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColors.whiteColor);
 
   static TextStyle regular14Text = GoogleFonts.cairo(
-      fontSize: 14.sp, fontWeight: FontWeight.w400, color: AppColors.primaryDark);
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColors.primaryDark);
 
   static TextStyle regular30Text = GoogleFonts.cairo(
       fontSize: 30.sp, fontWeight: FontWeight.w400, color: AppColors.fontColor);
@@ -25,7 +29,9 @@ class AppStyles {
       color: AppColors.searchHintColor);
 
   static TextStyle light16White = GoogleFonts.cairo(
-      fontSize: 16.sp, fontWeight: FontWeight.w300, color: AppColors.whiteColor);
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w300,
+      color: AppColors.whiteColor);
 
   static TextStyle light18HintText = GoogleFonts.cairo(
       fontSize: 18.sp,
@@ -33,13 +39,19 @@ class AppStyles {
       color: AppColors.hintTextColor);
 
   static TextStyle semi16TextWhite = GoogleFonts.cairo(
-      fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.primaryDark);
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w600,
+      color: AppColors.primaryDark);
 
   static TextStyle semi20Primary = GoogleFonts.cairo(
-      fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.primaryColor);
+      fontSize: 20.sp,
+      fontWeight: FontWeight.w600,
+      color: AppColors.primaryColor);
 
   static TextStyle semi24White = GoogleFonts.cairo(
-      fontSize: 24.sp, fontWeight: FontWeight.w600, color: AppColors.whiteColor);
+      fontSize: 24.sp,
+      fontWeight: FontWeight.w600,
+      color: AppColors.whiteColor);
 
   static TextStyle medium14LightPrimary = GoogleFonts.cairo(
       fontSize: 14.sp,
@@ -47,7 +59,9 @@ class AppStyles {
       color: AppColors.primaryDarkLight);
 
   static TextStyle medium14PrimaryDark = GoogleFonts.cairo(
-      fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.primaryDark);
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w500,
+      color: AppColors.primaryDark);
 
   static TextStyle medium18Header = GoogleFonts.cairo(
       fontSize: 18.sp,
@@ -55,46 +69,11 @@ class AppStyles {
       color: AppColors.primaryDark);
 
   static TextStyle medium18White = GoogleFonts.cairo(
-      fontSize: 18.sp, fontWeight: FontWeight.w500, color: AppColors.whiteColor);
-
-  static TextStyle medium20White = GoogleFonts.cairo(
-  static TextStyle regular16Text = GoogleFonts.poppins(
-      fontSize: 16.sp, fontWeight: FontWeight.w400, color: AppColors.fontColor);
-  static TextStyle regular16Button = GoogleFonts.poppins(
-      fontSize: 16.sp, fontWeight: FontWeight.w400, color: AppColors.whiteColor);
-  static TextStyle regular14Text = GoogleFonts.poppins(
-      fontSize: 14.sp, fontWeight: FontWeight.w400, color: AppColors.primaryDark);
-  static TextStyle regular30Text = GoogleFonts.poppins(
-      fontSize: 30.sp, fontWeight: FontWeight.w400, color: AppColors.fontColor);
-  static TextStyle light14SearchHint = GoogleFonts.poppins(
-      fontSize: 14.sp,
-      fontWeight: FontWeight.w300,
-      color: AppColors.searchHintColor);
-  static TextStyle light16White = GoogleFonts.poppins(
-      fontSize: 16.sp, fontWeight: FontWeight.w300, color: AppColors.whiteColor);
-  static TextStyle light18HintText = GoogleFonts.poppins(
-      fontSize: 18.sp, // تم توحيدها لـ sp
-      fontWeight: FontWeight.w300,
-      color: AppColors.hintTextColor);
-  static TextStyle semi16TextWhite = GoogleFonts.poppins(
-      fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.primaryDark);
-  static TextStyle semi20Primary = GoogleFonts.poppins(
-      fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.primaryColor);
-  static TextStyle semi24White = GoogleFonts.poppins(
-      fontSize: 24.sp, fontWeight: FontWeight.w600, color: AppColors.whiteColor);
-
-  static TextStyle medium14LightPrimary = GoogleFonts.poppins(
-      fontSize: 14.sp,
-      fontWeight: FontWeight.w500,
-      color: AppColors.primaryDarkLight);
-  static TextStyle medium14PrimaryDark = GoogleFonts.poppins(
-      fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.primaryDark);
-  static TextStyle medium18Header = GoogleFonts.poppins(
       fontSize: 18.sp,
       fontWeight: FontWeight.w500,
-      color: AppColors.primaryDark);
-  static TextStyle medium18White = GoogleFonts.poppins(
-      fontSize: 18.sp, fontWeight: FontWeight.w500, color: AppColors.whiteColor);
-  static TextStyle medium20White = GoogleFonts.poppins(
-      fontSize: 20.sp, fontWeight: FontWeight.w500, color: AppColors.whiteColor);
+      color: AppColors.whiteColor);
+
+  static TextStyle medium20White = GoogleFonts.cairo(
+      fontSize: 16.sp, fontWeight: FontWeight.w400, color: AppColors.fontColor);
+
 }
