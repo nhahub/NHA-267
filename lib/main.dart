@@ -1,4 +1,4 @@
-import 'package:depi_graduation_project/features/ui/auth/register/registerScreenStates/register_screen.dart';
+import 'package:depi_graduation_project/features/ui/auth/register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
