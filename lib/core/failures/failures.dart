@@ -6,6 +6,6 @@ class Failers{
 class ServerError extends Failers{
   ServerError({required super.ErrorMsg});
 }
-class ClientError extends Failers{
-  ClientError({required super.ErrorMsg});
+class NetworkError extends Failers{
+  NetworkError({required super.ErrorMsg});
 }
