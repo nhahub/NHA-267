@@ -1,9 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:depi_graduation_project/core/utils/app_colors.dart';
 import 'package:depi_graduation_project/core/utils/app_routes.dart';
 import 'package:depi_graduation_project/core/utils/app_styles.dart';
+import 'package:depi_graduation_project/core/utils/app_validators.dart';
+import 'package:depi_graduation_project/core/utils/dialog_utils.dart';
 import 'package:depi_graduation_project/features/ui/widgets/custom_text_form_field.dart';
-import 'package:flutter/material.dart';
-// تأكد من أن المسارات التالية صحيحة حسب مشروعك
+import 'package:depi_graduation_project/features/ui/widgets/custom_elevated_button.dart';
+import 'package:depi_graduation_project/domain/repositories/auth_repository_impl.dart';
+
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,12 +18,17 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // المتحكمات في النصوص
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController rePasswordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool isPasswordVisible = false;
+  bool isRePasswordVisible = false;
+
+  final AuthRepositoryImpl _authRepository = AuthRepositoryImpl();
 
   @override
   Widget build(BuildContext context) {
@@ -27,154 +37,143 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 40),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                SizedBox(height: 40.h),
 
-                // أيقونة التسجيل
-                const Center(
-                  child: Icon(
-                    Icons.person_add_alt_1_outlined,
-                    size: 80,
-                    color: Colors.white,
-                  ),
+            // اللوجو في الأعلى (كما في شاشة التسجيل)
+            Center(
+              child: SizedBox(
+                height: 80.h,
+                width: 80.w,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  color: AppColors.whiteColor,
+                  colorBlendMode: BlendMode.srcIn,
+                  fit: BoxFit.contain,
                 ),
-                const SizedBox(height: 40),
+              ),
+            ),
+            SizedBox(height: 40.h),
 
-                // عنوان الصفحة
-                const Text(
-                  "إنشاء حساب جديد",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Cairo', // تأكد من إضافة الخط في pubspec.yaml
+            // عنوان الصفحة
+            Text(
+              "إنشاء حساب جديد",
+              textAlign: TextAlign.center,
+              style: AppStyles.semi24White,
+            ),
+            SizedBox(height: 20.h),
+
+            // فورم البيانات
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // الاسم بالكامل
+                  _buildLabel("الاسم بالكامل"),
+                  CustomTextFormField(
+                    controller: fullNameController,
+                    hintText: "أدخل اسمك بالكامل",
+                    keyboardType: TextInputType.name,
+                    filledColor: AppColors.whiteColor,
+                    validator: AppValidators.validateFullName,
                   ),
-                ),
-                const SizedBox(height: 20),
 
-                // فورم البيانات
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // الاسم بالكامل
-                    _buildLabel("الاسم بالكامل"),
-                    CustomTextFormField(
-                      controller: fullNameController,
-                      hintText: "أدخل اسمك ثلاثي",
-                      keyboardType: TextInputType.name,
-                      filledColor: Colors.white,
+                  // رقم الهاتف
+                  _buildLabel("رقم الهاتف"),
+                  CustomTextFormField(
+                    controller: phoneController,
+                    hintText: "أدخل رقم هاتفك",
+                    keyboardType: TextInputType.phone,
+                    filledColor: AppColors.whiteColor,
+                    validator: AppValidators.validatePhoneNumber,
+                  ),
+
+                  // البريد الإلكتروني
+                  _buildLabel("البريد الإلكتروني"),
+                  CustomTextFormField(
+                    controller: emailController,
+                    hintText: "أدخل بريدك الإلكتروني",
+                    keyboardType: TextInputType.emailAddress,
+                    filledColor: AppColors.whiteColor,
+                    validator: AppValidators.validateEmail,
+                  ),
+
+                  // كلمة المرور
+                  _buildLabel("كلمة المرور"),
+                  CustomTextFormField(
+                    controller: passwordController,
+                    hintText: "أدخل كلمة المرور",
+                    filledColor: AppColors.whiteColor,
+                    isPassword: true,
+                    isObscureText: !isPasswordVisible,
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: AppValidators.validatePassword,
+                    suffixIcon: IconButton(
+                      onPressed: () => setState(() => isPasswordVisible = !isPasswordVisible),
+                      icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off, color: AppColors.hintTextColor),
                     ),
+                  ),
 
-                    // رقم الهاتف
-                    _buildLabel("رقم الهاتف"),
-                    CustomTextFormField(
-                      controller: phoneController,
-                      hintText: "أدخل رقم هاتفك",
-                      keyboardType: TextInputType.phone,
-                      filledColor: Colors.white,
+                  // تأكيد كلمة المرور
+                  _buildLabel("تأكيد كلمة المرور"),
+                  CustomTextFormField(
+                    controller: rePasswordController,
+                    hintText: "أعد إدخال كلمة المرور",
+                    filledColor: AppColors.whiteColor,
+                    isPassword: true,
+                    isObscureText: !isRePasswordVisible,
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: (val) => AppValidators.validateConfirmPassword(val, passwordController.text),
+                    suffixIcon: IconButton(
+                      onPressed: () => setState(() => isRePasswordVisible = !isRePasswordVisible),
+                      icon: Icon(isRePasswordVisible ? Icons.visibility : Icons.visibility_off, color: AppColors.hintTextColor),
                     ),
+                  ),
 
-                    // البريد الإلكتروني
-                    _buildLabel("البريد الإلكتروني"),
-                    CustomTextFormField(
-                      controller: emailController,
-                      hintText: "أدخل بريدك الإلكتروني",
-                      keyboardType: TextInputType.emailAddress,
-                      filledColor: Colors.white,
-                    ),
+                  SizedBox(height: 35.h),
 
-                    // كلمة المرور
-                    _buildLabel("كلمة المرور"),
-                    CustomTextFormField(
-                      controller: passwordController,
-                      hintText: "أدخل كلمة المرور",
-                      filledColor: Colors.white,
-                      isPassword: true,
-                      isObscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
-                    ),
+                  // زر إنشاء الحساب
+                  CustomElevatedButton(
+                    backgroundColor: AppColors.whiteColor,
+                    textStyle: AppStyles.semi20Primary,
+                    text: "إنشاء حساب", // لم نعد نحتاج حالة التحميل في زر
+                    onPressed: _onRegisterPressed,
+                  ),
 
-                    // تأكيد كلمة المرور
-                    _buildLabel("تأكيد كلمة المرور"),
-                    CustomTextFormField(
-                      controller: rePasswordController,
-                      hintText: "أعد إدخال كلمة المرور",
-                      filledColor: Colors.white,
-                      isPassword: true,
-                      isObscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
-                    ),
+                  SizedBox(height: 30.h),
 
-                    const SizedBox(height: 35),
-
-                    // زر إنشاء الحساب
-                    SizedBox(
-                      height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        onPressed: () {
-                          // كود التسجيل هنا
-                          print("جاري التسجيل: ${fullNameController.text}");
-                        },
-                        child: Text(
-                          "إنشاء حساب",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primaryColor,
-                            fontFamily: 'Cairo',
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    // رابط الذهاب لتسجيل الدخول
-                    GestureDetector(
-                      onTap: () {
-                        // الانتقال لصفحة تسجيل الدخول واستبدال الصفحة الحالية
-                        Navigator.pushReplacementNamed(context, AppRoutes.loginRoute);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  // رابط الذهاب لتسجيل الدخول
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, AppRoutes.loginRoute);
+                    },
+                    child: Text.rich(
+                      TextSpan(
                         children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'لديك حساب بالفعل؟ ',
-                                  style: AppStyles.medium18White,
-                                ),
-                                TextSpan(
-                                  text: 'تسجيل الدخول',
-                                  style: AppStyles.medium18White.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline, // وضع الخط هنا
-                                    decorationColor: Colors.white,
-                                    decorationThickness: 2,
-                                  ),
-                                ),
-                              ],
+                          TextSpan(text: 'لديك حساب بالفعل؟ ', style: AppStyles.medium18White),
+                          TextSpan(
+                            text: 'تسجيل الدخول',
+                            style: AppStyles.medium18White.copyWith(
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.whiteColor,
+                              decorationThickness: 2,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
+                ],
             ),
           ),
         ),
@@ -182,13 +181,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // دالة مساعدة لإنشاء العناوين فوق الحقول
+  void _onRegisterPressed() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    // 💡 إظهار شاشة التحميل
+    DialogUtils.showLoading(context: context, message: "جاري إنشاء الحساب...");
+
+    final result = await _authRepository.registerUser(
+      fullName: fullNameController.text.trim(),
+      email: emailController.text.trim(),
+      password: passwordController.text,
+    );
+
+    // 💡 إخفاء شاشة التحميل بعد الانتهاء
+    DialogUtils.hideLoading(context);
+
+    result.fold(
+          (error) {
+        DialogUtils.showMessage(context: context, title: "خطأ", message: error, posActionName: "حسناً");
+      },
+          (_) {
+        DialogUtils.showMessage(
+            context: context,
+            title: "نجاح",
+            message: "تم إنشاء الحساب بنجاح!",
+            posActionName: "متابعة",
+            posAction: () {
+              // الانتقال لصفحة الهوم مباشرة
+              Navigator.pushReplacementNamed(context, AppRoutes.homeRoute);
+            }
+        );
+      },
+    );
+  }
+
   Widget _buildLabel(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, top: 12.0),
+      padding: EdgeInsets.only(bottom: 8.h, top: 12.h),
       child: Text(
         text,
-        style: AppStyles.medium18White, // استخدام الستايل الموحد
+        style: AppStyles.medium18White,
       ),
     );
   }

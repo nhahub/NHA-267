@@ -1,6 +1,7 @@
 class AppRoutes {
   static const String loginRoute = '/login';
   static const String registerRoute = '/register';
+  static const String forgotPasswordRoute = '/forgotPassword';
   static const String homeRoute = '/home';
-// يمكنك إضافة المزيد من المسارات هنا
+  static const String profileRoute = '/profile';
 }

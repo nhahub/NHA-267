@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/app_styles.dart';
+import '../../../../core/utils/app_validators.dart';
+import '../../../../core/utils/dialog_utils.dart'; // 💡 إضافة DialogUtils
+import 'package:depi_graduation_project/domain/repositories/auth_repository_impl.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 
@@ -16,12 +18,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // المتحكمات
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  // مفتاح التحقق من الفورم
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool isPasswordVisible = false;
+
+  final AuthRepositoryImpl _authRepository = AuthRepositoryImpl();
 
   @override
   Widget build(BuildContext context) {
@@ -31,27 +34,21 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 1. اللوجو والمساحة العلوية
+              // اللوجو
               Padding(
                 padding: EdgeInsets.only(
-                  top: 60.h,
-                  bottom: 40.h,
+                  top: 91.h,
+                  bottom: 87.h,
                 ),
                 child: SizedBox(
                   height: 120.h,
                   width: 120.w,
-                  child: Icon(
-                    Icons.gavel_rounded, // أيقونة قانونية مؤقتة بدلاً من الصورة
-                    size: 100,
-                    color: Colors.white,
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    color: AppColors.whiteColor,
+                    colorBlendMode: BlendMode.srcIn,
+                    fit: BoxFit.contain,
                   ),
-                  // يمكنك استخدام الصورة بدلاً من الأيقونة كالتالي:
-                  // child: Image.asset(
-                  //   'assets/images/logo.png',
-                  //   color: AppColors.whiteColor,
-                  //   colorBlendMode: BlendMode.srcIn,
-                  //   fit: BoxFit.contain,
-                  // ),
                 ),
               ),
 
@@ -60,137 +57,110 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // 2. نصوص الترحيب
-                    Center(
-                      child: AutoSizeText(
-                        'أهلاً بك',
-                        style: AppStyles.semi24White,
-                        maxLines: 1,
-                      ),
+                    AutoSizeText(
+                      'اهلا بيك',
+                      style: AppStyles.semi24White,
+                      maxLines: 1,
                     ),
-                    SizedBox(height: 8.h),
-                    Center(
-                      child: AutoSizeText(
-                        'سجّل دخولك لمتابعة جميع القوانين',
-                        style: AppStyles.light16White,
-                        maxLines: 1,
-                      ),
+                    AutoSizeText(
+                      'سجّل دخولك لمتابعة جميع القوانين ',
+                      style: AppStyles.light16White,
+                      maxLines: 1,
                     ),
 
                     Padding(
                       padding: EdgeInsets.only(top: 40.h),
                       child: Form(
-                        key: _formKey, // ربط المفتاح هنا
+                        key: _formKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // 3. حقل اسم المستخدم
                             Text(
                               "اسم المستخدم",
                               style: AppStyles.medium18White,
                             ),
                             CustomTextFormField(
-                              controller: userNameController,
-                              hintText: "اكتب اسمك هنا",
+                              isPassword: false,
                               keyboardType: TextInputType.text,
+                              isObscureText: false,
+                              hintText: "اكتب اسمك هنا",
+                              hintStyle: AppStyles.light18HintText,
                               filledColor: AppColors.whiteColor,
-                              // استخدم AppValidators.validateUsername إذا كان الملف موجوداً
-                              // validator: AppValidators.validateUsername,
-                              validator: (text) {
-                                if (text == null || text.trim().isEmpty) {
-                                  return 'من فضلك ادخل اسم المستخدم';
-                                }
-                                return null;
-                              },
+                              controller: userNameController,
+                              validator: AppValidators.validateUsername,
                             ),
 
-                            // 4. حقل كلمة المرور
                             Text(
                               "كلمة المرور",
                               style: AppStyles.medium18White,
                             ),
                             CustomTextFormField(
-                              controller: passwordController,
-                              hintText: "اكتب كلمة المرور",
-                              isPassword: true,      // تفعيل زر العين
-                              isObscureText: true,   // إخفاء النص افتراضياً
+                              isPassword: true,
                               keyboardType: TextInputType.visiblePassword,
+                              isObscureText: !isPasswordVisible,
+                              hintText: "اكتب كلمة المرور",
+                              hintStyle: AppStyles.light18HintText,
                               filledColor: AppColors.whiteColor,
-                              // validator: AppValidators.validatePassword,
-                              validator: (text) {
-                                if (text == null || text.trim().isEmpty) {
-                                  return 'من فضلك ادخل كلمة المرور';
-                                }
-                                if (text.length < 6) {
-                                  return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-                                }
-                                return null;
-                              },
+                              controller: passwordController,
+                              validator: AppValidators.validatePassword,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isPasswordVisible = !isPasswordVisible;
+                                  });
+                                },
+                                icon: Icon(
+                                  isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: AppColors.hintTextColor,
+                                ),
+                              ),
                             ),
 
-                            // 5. رابط نسيان كلمة المرور
                             Align(
                               alignment: Alignment.centerLeft,
                               child: InkWell(
                                 onTap: () {
-                                  // الانتقال لصفحة نسيان كلمة المرور
+                                  // الانتقال لصفحة نسيت كلمة المرور
+                                  Navigator.pushNamed(context, AppRoutes.forgotPasswordRoute);
                                 },
                                 child: Text(
-                                  'نسيت كلمة المرور؟',
-                                  style: AppStyles.medium18White.copyWith(fontSize: 14.sp),
+                                  'نسيت كلمة المرور',
+                                  style: AppStyles.medium18White,
                                   textAlign: TextAlign.end,
                                 ),
                               ),
                             ),
 
-                            // 6. زر تسجيل الدخول
                             Padding(
                               padding: EdgeInsets.only(top: 35.h),
                               child: CustomElevatedButton(
                                 backgroundColor: AppColors.whiteColor,
                                 textStyle: AppStyles.semi20Primary,
                                 text: "تسجيل الدخول",
-                                onPressed: () {
-                                  // التحقق من صحة البيانات قبل الإرسال
-                                  if (_formKey.currentState!.validate()) {
-                                    print("Valid form. Login: ${userNameController.text}");
-                                    // استدعاء الـ Bloc/Cubit هنا
-                                  }
-                                },
+                                onPressed: _onLoginPressed,
                               ),
                             ),
 
-                            // 7. رابط إنشاء حساب جديد
                             Padding(
-                              padding: EdgeInsets.only(top: 30.h, bottom: 20.h),
+                              padding: EdgeInsets.only(top: 30.h),
                               child: GestureDetector(
                                 onTap: () {
+                                  // التنقل لصفحة التسجيل
                                   Navigator.pushReplacementNamed(
                                     context,
                                     AppRoutes.registerRoute,
                                   );
                                 },
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'لا تملك حساب؟ ',
-                                            style: AppStyles.medium18White,
-                                          ),
-                                          TextSpan(
-                                            text: 'أنشئ حساب جديد',
-                                            style: AppStyles.medium18White.copyWith(
-                                              decoration: TextDecoration.underline,
-                                              decorationColor: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
+                                    Expanded(
+                                      child: Text(
+                                        ' لا تملك حساب؟ أنشئ حساب جديد',
+                                        style: AppStyles.medium18White,
+                                        textAlign: TextAlign.center,
                                       ),
-                                      textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
@@ -207,6 +177,39 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _onLoginPressed() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    // 💡 إظهار شاشة التحميل
+    DialogUtils.showLoading(context: context, message: "جاري تسجيل الدخول...");
+
+    final result = await _authRepository.loginUser(
+      username: userNameController.text.trim(),
+      password: passwordController.text,
+    );
+
+    // 💡 إخفاء شاشة التحميل بعد الانتهاء
+    DialogUtils.hideLoading(context);
+
+    result.fold(
+          (error) {
+        DialogUtils.showMessage(context: context, title: "خطأ", message: error, posActionName: "حسناً");
+      },
+          (_) {
+        DialogUtils.showMessage(
+            context: context,
+            title: "نجاح",
+            message: "تم تسجيل الدخول بنجاح!",
+            posActionName: "متابعة",
+            posAction: () {
+              // الانتقال لصفحة الهوم مباشرة
+              Navigator.pushReplacementNamed(context, AppRoutes.homeRoute);
+            }
+        );
+      },
     );
   }
 }
