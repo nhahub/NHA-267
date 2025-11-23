@@ -2,11 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// تأكد من صحة المسارات حسب هيكلة مشروعك
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/app_styles.dart';
-// import '../../../../core/utils/app_validators.dart'; // قم بإلغاء التعليق إذا كان الملف موجوداً
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 
