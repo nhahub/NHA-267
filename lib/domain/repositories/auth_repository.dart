@@ -1,20 +1,23 @@
 import 'package:dartz/dartz.dart';
+import 'package:depi_graduation_project/core/failures/failures.dart';
+import 'package:depi_graduation_project/domain/entities/RegisterResponseEntity.dart';
 
-// 💡 واجهة Repository الأساسية للـ Authentication
 abstract class AuthRepository {
-  // 1. التسجيل (Mock)
-  Future<Either<String, void>> registerUser({
+  // 1. التسجيل
+  // ✅ التعديل: أضفنا required لكل الحقول
+  Future<Either<Failers, RegisterResponseEntity>> register({
     required String fullName,
     required String email,
     required String password,
+    required String rePassword,
   });
 
-  // 2. تسجيل الدخول (Mock)
-  Future<Either<String, void>> loginUser({
+  // 2. تسجيل الدخول
+  Future<Either<String, void>> login({
     required String username,
     required String password,
   });
 
-  // 3. استرجاع الاسم من الذاكرة
+  // 3. استرجاع الاسم
   Future<String?> getUserName();
 }

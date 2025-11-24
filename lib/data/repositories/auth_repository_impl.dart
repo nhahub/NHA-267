@@ -3,7 +3,9 @@ import 'package:depi_graduation_project/core/failures/failures.dart';
 import 'package:depi_graduation_project/domain/entities/RegisterResponseEntity.dart';
 import 'package:depi_graduation_project/domain/repositories/data_source/remote_data_source/auth_remote_data_source.dart';
 import 'package:depi_graduation_project/domain/repositories/repositories/auth_repostiory.dart';
+import 'package:injectable/injectable.dart';
 
+@Injectable(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   AuthRemoteDataSource authRemoteDataSource;
 
