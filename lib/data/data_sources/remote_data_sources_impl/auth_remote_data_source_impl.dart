@@ -7,8 +7,11 @@ import 'package:depi_graduation_project/core/failures/failures.dart';
 import 'package:depi_graduation_project/data/model/RegisterResponseDM.dart';
 
 import 'package:depi_graduation_project/domain/entities/RegisterResponseEntity.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../domain/repositories/data_source/remote_data_source/auth_remote_data_source.dart';
+
+@Injectable(as: AuthRemoteDataSource)
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   ApiManager apimanager;
@@ -18,32 +21,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<Either<Failers, RegisterResponseDm>> register(String name,
       String email, String password, String rePassword, String phone) async {
-    final List<ConnectivityResult> connectivityResult =
-        await Connectivity().checkConnectivity();
-    if (connectivityResult.contains(ConnectivityResult.wifi) ||
-        connectivityResult.contains(ConnectivityResult.mobile)) {
-      // todo : internet connection
+    try {
+      final List<ConnectivityResult> connectivityResult =
+      await Connectivity().checkConnectivity();
+      if (connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.mobile)) {
+        // todo : internet connection
 
-      var response =
-          await apimanager.postData(endpoint: EndPoints.signUp, body: {
-        "name": name,
-        "email": email,
-        "password": password,
-        "rePassword": rePassword,
-        "phone": phone
-      });
-      response.data;
-      var registerResponse = RegisterResponseDm.fromJson(response.data);
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        return Right(registerResponse);
+        var response =
+        await apimanager.postData(endpoint: EndPoints.signUp, body: {
+          "name": name,
+          "email": email,
+          "password": password,
+          "rePassword": rePassword,
+          "phone": phone
+        });
+        response.data;
+        var registerResponse = RegisterResponseDm.fromJson(response.data);
+        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          return Right(registerResponse);
+        } else {
+          return Left(ServerError(ErrorMsg: registerResponse.message!));
+        }
       } else {
-        return Left(ServerError(ErrorMsg: registerResponse.message!));
+        // todo : no internet connection
+        return Left(NetworkError(
+            ErrorMsg:
+            "No Internet Connection , Please Check Your Internet Connection "));
       }
-    } else {
-      // todo : no internet connection
-      return Left(NetworkError(
-          ErrorMsg:
-              "No Internet Connection , Please Check Your Internet Connection "));
+    }catch(e){
+      return Left(ServerError(ErrorMsg: e.toString()));
     }
   }
 }

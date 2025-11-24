@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:depi_graduation_project/domain/repositories/repositories/auth_repostiory.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../core/failures/failures.dart';
 import '../entities/RegisterResponseEntity.dart';
-
+@injectable
 class RegisterUseCase{
   AuthRepository authRepository;
   RegisterUseCase(this.authRepository);

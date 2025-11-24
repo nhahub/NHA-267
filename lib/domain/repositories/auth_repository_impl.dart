@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:depi_graduation_project/core/failures/failures.dart';
+import 'package:depi_graduation_project/domain/entities/RegisterResponseEntity.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // 💡 لإدارة البيانات المحلية
 
 import '../../domain/repositories/auth_repository.dart';
@@ -57,5 +59,17 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<String?> getUserName() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(kUserNameKey);
+  }
+
+  @override
+  Future<Either<String, void>> login({required String username, required String password}) {
+    // TODO: implement login
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failers, RegisterResponseEntity>> register({required String fullName, required String email, required String password, required String rePassword}) {
+    // TODO: implement register
+    throw UnimplementedError();
   }
 }

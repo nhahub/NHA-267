@@ -1,5 +1,4 @@
-// --- (التعديل الوحيد والمهم هو السطر ده) ---
-import 'DI.config.dart';
+import 'DI.config.dart'; // todo : will be generated
 
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';

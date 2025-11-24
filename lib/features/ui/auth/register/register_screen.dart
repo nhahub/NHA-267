@@ -1,4 +1,8 @@
+import 'package:depi_graduation_project/DI/DI.dart';
+import 'package:depi_graduation_project/features/ui/auth/register/cubit/register_States.dart';
+import 'package:depi_graduation_project/features/ui/auth/register/cubit/register_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:depi_graduation_project/core/utils/app_colors.dart';
 import 'package:depi_graduation_project/core/utils/app_routes.dart';
@@ -7,8 +11,6 @@ import 'package:depi_graduation_project/core/utils/app_validators.dart';
 import 'package:depi_graduation_project/core/utils/dialog_utils.dart';
 import 'package:depi_graduation_project/features/ui/widgets/custom_text_form_field.dart';
 import 'package:depi_graduation_project/features/ui/widgets/custom_elevated_button.dart';
-import 'package:depi_graduation_project/domain/repositories/auth_repository_impl.dart';
-
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,200 +20,192 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController rePasswordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // تم حذف الـ Controllers من هنا لأننا بنستخدم اللي جوه الـ ViewModel
 
+  // متغيرات الـ UI الخاصة بإظهار وإخفاء الباسورد بتبقى Local State عادي
   bool isPasswordVisible = false;
   bool isRePasswordVisible = false;
 
-  final AuthRepositoryImpl _authRepository = AuthRepositoryImpl();
+  // تم حذف الـ AuthRepository لأنه غير مستخدم هنا
+
+  // استدعاء الـ ViewModel
+  RegisterViewModel viewModel = getIt<RegisterViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                SizedBox(height: 40.h),
-
-            // اللوجو في الأعلى (كما في شاشة التسجيل)
-            Center(
-              child: SizedBox(
-                height: 80.h,
-                width: 80.w,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  color: AppColors.whiteColor,
-                  colorBlendMode: BlendMode.srcIn,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            SizedBox(height: 40.h),
-
-            // عنوان الصفحة
-            Text(
-              "إنشاء حساب جديد",
-              textAlign: TextAlign.center,
-              style: AppStyles.semi24White,
-            ),
-            SizedBox(height: 20.h),
-
-            // فورم البيانات
-            Form(
-              key: _formKey,
+    return BlocListener<RegisterViewModel, RegisterStates>(
+      bloc: viewModel,
+      listener: (context, state) {
+        if (state is RegisterLoadingState) {
+          DialogUtils.showLoading(context: context, message: 'Loading...');
+        } else if (state is RegisterErrorState) {
+          DialogUtils.hideLoading(context);
+          DialogUtils.showMessage(
+            context: context,
+            message: state.failers.ErrorMsg, // تأكد ان الاسم failure مش failers لو متاح
+            title: "Error",
+            posActionName: "Ok",
+          );
+        } else if (state is RegisterSuccessState) {
+          DialogUtils.hideLoading(context);
+          DialogUtils.showMessage(
+              context: context,
+              message: 'Register Successfully',
+              title: "Success",
+              posActionName: "Ok",
+              posAction: () {
+                // يفضل هنا تنقله لصفحة تسجيل الدخول أو الصفحة الرئيسية
+                Navigator.pushReplacementNamed(context, AppRoutes.loginRoute);
+              }
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.primaryColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // الاسم بالكامل
-                  _buildLabel("الاسم بالكامل"),
-                  CustomTextFormField(
-                    controller: fullNameController,
-                    hintText: "أدخل اسمك بالكامل",
-                    keyboardType: TextInputType.name,
-                    filledColor: AppColors.whiteColor,
-                    validator: AppValidators.validateFullName,
-                  ),
-
-                  // رقم الهاتف
-                  _buildLabel("رقم الهاتف"),
-                  CustomTextFormField(
-                    controller: phoneController,
-                    hintText: "أدخل رقم هاتفك",
-                    keyboardType: TextInputType.phone,
-                    filledColor: AppColors.whiteColor,
-                    validator: AppValidators.validatePhoneNumber,
-                  ),
-
-                  // البريد الإلكتروني
-                  _buildLabel("البريد الإلكتروني"),
-                  CustomTextFormField(
-                    controller: emailController,
-                    hintText: "أدخل بريدك الإلكتروني",
-                    keyboardType: TextInputType.emailAddress,
-                    filledColor: AppColors.whiteColor,
-                    validator: AppValidators.validateEmail,
-                  ),
-
-                  // كلمة المرور
-                  _buildLabel("كلمة المرور"),
-                  CustomTextFormField(
-                    controller: passwordController,
-                    hintText: "أدخل كلمة المرور",
-                    filledColor: AppColors.whiteColor,
-                    isPassword: true,
-                    isObscureText: !isPasswordVisible,
-                    keyboardType: TextInputType.visiblePassword,
-                    validator: AppValidators.validatePassword,
-                    suffixIcon: IconButton(
-                      onPressed: () => setState(() => isPasswordVisible = !isPasswordVisible),
-                      icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off, color: AppColors.hintTextColor),
-                    ),
-                  ),
-
-                  // تأكيد كلمة المرور
-                  _buildLabel("تأكيد كلمة المرور"),
-                  CustomTextFormField(
-                    controller: rePasswordController,
-                    hintText: "أعد إدخال كلمة المرور",
-                    filledColor: AppColors.whiteColor,
-                    isPassword: true,
-                    isObscureText: !isRePasswordVisible,
-                    keyboardType: TextInputType.visiblePassword,
-                    validator: (val) => AppValidators.validateConfirmPassword(val, passwordController.text),
-                    suffixIcon: IconButton(
-                      onPressed: () => setState(() => isRePasswordVisible = !isRePasswordVisible),
-                      icon: Icon(isRePasswordVisible ? Icons.visibility : Icons.visibility_off, color: AppColors.hintTextColor),
-                    ),
-                  ),
-
-                  SizedBox(height: 35.h),
-
-                  // زر إنشاء الحساب
-                  CustomElevatedButton(
-                    backgroundColor: AppColors.whiteColor,
-                    textStyle: AppStyles.semi20Primary,
-                    text: "إنشاء حساب", // لم نعد نحتاج حالة التحميل في زر
-                    onPressed: _onRegisterPressed,
-                  ),
-
-                  SizedBox(height: 30.h),
-
-                  // رابط الذهاب لتسجيل الدخول
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, AppRoutes.loginRoute);
-                    },
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(text: 'لديك حساب بالفعل؟ ', style: AppStyles.medium18White),
-                          TextSpan(
-                            text: 'تسجيل الدخول',
-                            style: AppStyles.medium18White.copyWith(
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              decorationColor: AppColors.whiteColor,
-                              decorationThickness: 2,
-                            ),
-                          ),
-                        ],
+                  SizedBox(height: 40.h),
+                  Center(
+                    child: SizedBox(
+                      height: 80.h,
+                      width: 80.w,
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        color: AppColors.whiteColor,
+                        colorBlendMode: BlendMode.srcIn,
+                        fit: BoxFit.contain,
                       ),
-                      textAlign: TextAlign.center,
                     ),
+                  ),
+                  SizedBox(height: 40.h),
+                  Text(
+                    "إنشاء حساب جديد",
+                    textAlign: TextAlign.center,
+                    style: AppStyles.semi24White,
                   ),
                   SizedBox(height: 20.h),
+                  Form(
+                    key: viewModel.formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildLabel("الاسم بالكامل"),
+                        CustomTextFormField(
+                          controller: viewModel.fullNameController,
+                          hintText: "أدخل اسمك بالكامل",
+                          keyboardType: TextInputType.name,
+                          filledColor: AppColors.whiteColor,
+                          validator: AppValidators.validateFullName,
+                        ),
+                        _buildLabel("رقم الهاتف"),
+                        CustomTextFormField(
+                          controller: viewModel.phoneController,
+                          hintText: "أدخل رقم هاتفك",
+                          keyboardType: TextInputType.phone,
+                          filledColor: AppColors.whiteColor,
+                          validator: AppValidators.validatePhoneNumber,
+                        ),
+                        _buildLabel("البريد الإلكتروني"),
+                        CustomTextFormField(
+                          controller: viewModel.emailController,
+                          hintText: "أدخل بريدك الإلكتروني",
+                          keyboardType: TextInputType.emailAddress,
+                          filledColor: AppColors.whiteColor,
+                          validator: AppValidators.validateEmail,
+                        ),
+                        _buildLabel("كلمة المرور"),
+                        CustomTextFormField(
+                          controller: viewModel.passwordController,
+                          hintText: "أدخل كلمة المرور",
+                          filledColor: AppColors.whiteColor,
+                          isPassword: true,
+                          isObscureText: !isPasswordVisible,
+                          keyboardType: TextInputType.visiblePassword,
+                          validator: AppValidators.validatePassword,
+                          suffixIcon: IconButton(
+                            onPressed: () => setState(
+                                    () => isPasswordVisible = !isPasswordVisible),
+                            icon: Icon(
+                                isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: AppColors.hintTextColor),
+                          ),
+                        ),
+                        _buildLabel("تأكيد كلمة المرور"),
+                        CustomTextFormField(
+                          controller: viewModel.rePasswordController,
+                          hintText: "أعد إدخال كلمة المرور",
+                          filledColor: AppColors.whiteColor,
+                          isPassword: true,
+                          isObscureText: !isRePasswordVisible,
+                          keyboardType: TextInputType.visiblePassword,
+                          // -------------------------------------------------------
+                          // التعديل هنا: المقارنة مع الكنترولر الخاص بالفيو موديل
+                          // -------------------------------------------------------
+                          validator: (val) =>
+                              AppValidators.validateConfirmPassword(
+                                  val, viewModel.passwordController.text),
+                          suffixIcon: IconButton(
+                            onPressed: () => setState(
+                                    () => isRePasswordVisible = !isRePasswordVisible),
+                            icon: Icon(
+                                isRePasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: AppColors.hintTextColor),
+                          ),
+                        ),
+                        SizedBox(height: 35.h),
+                        CustomElevatedButton(
+                          backgroundColor: AppColors.whiteColor,
+                          textStyle: AppStyles.semi20Primary,
+                          text: "إنشاء حساب",
+                          onPressed: () {
+                            viewModel.register();
+                          },
+                        ),
+                        SizedBox(height: 30.h),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, AppRoutes.loginRoute);
+                          },
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                    text: 'لديك حساب بالفعل؟ ',
+                                    style: AppStyles.medium18White),
+                                TextSpan(
+                                  text: 'تسجيل الدخول',
+                                  style: AppStyles.medium18White.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: AppColors.whiteColor,
+                                    decorationThickness: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(height: 20.h),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-                ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  void _onRegisterPressed() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    // 💡 إظهار شاشة التحميل
-    DialogUtils.showLoading(context: context, message: "جاري إنشاء الحساب...");
-
-    final result = await _authRepository.registerUser(
-      fullName: fullNameController.text.trim(),
-      email: emailController.text.trim(),
-      password: passwordController.text,
-    );
-
-    // 💡 إخفاء شاشة التحميل بعد الانتهاء
-    DialogUtils.hideLoading(context);
-
-    result.fold(
-          (error) {
-        DialogUtils.showMessage(context: context, title: "خطأ", message: error, posActionName: "حسناً");
-      },
-          (_) {
-        DialogUtils.showMessage(
-            context: context,
-            title: "نجاح",
-            message: "تم إنشاء الحساب بنجاح!",
-            posActionName: "متابعة",
-            posAction: () {
-              // الانتقال لصفحة الهوم مباشرة
-              Navigator.pushReplacementNamed(context, AppRoutes.homeRoute);
-            }
-        );
-      },
     );
   }
 

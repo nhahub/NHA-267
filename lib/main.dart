@@ -1,5 +1,7 @@
+import 'package:depi_graduation_project/core/utils/my_bloc_observer.dart';
 import 'package:depi_graduation_project/features/ui/auth/register/register_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,11 +19,13 @@ import 'features/ui/auth/Login/login_screen.dart';
 
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  Bloc.observer = MyBlocObserver();
 
   await SharedPreferenceUtils.init();
-  // await configureDependencies();
+
+
+  configureDependencies();
 
   runApp(const MyApp());
 }
