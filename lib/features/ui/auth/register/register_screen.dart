@@ -43,15 +43,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
           DialogUtils.showMessage(
             context: context,
             message: state.failers.ErrorMsg, // تأكد ان الاسم failure مش failers لو متاح
-            title: "Error",
+            title: "حدث خطأ",
             posActionName: "Ok",
           );
         } else if (state is RegisterSuccessState) {
           DialogUtils.hideLoading(context);
           DialogUtils.showMessage(
               context: context,
-              message: 'Register Successfully',
-              title: "Success",
+              message: 'تم التسجيل بنجاح',
+              title: "انشاء حساب",
               posActionName: "Ok",
               posAction: () {
                 // يفضل هنا تنقله لصفحة تسجيل الدخول أو الصفحة الرئيسية

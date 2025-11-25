@@ -3,7 +3,6 @@ import 'package:depi_graduation_project/features/ui/auth/register/register_scree
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/cache/SharedPreference.dart';
@@ -12,13 +11,13 @@ import 'core/utils/app_routes.dart';
 import 'core/utils/app_theme.dart';
 
 import 'screens/splash_screen.dart';
-import 'utils/constants.dart';
 
 // (إمبورت شاشة تسجيل الدخول)
 import 'features/ui/auth/Login/login_screen.dart';
-
+import 'features/ui/pages/home_screen/home_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
   Bloc.observer = MyBlocObserver();
 
@@ -70,7 +69,7 @@ class MyApp extends StatelessWidget {
           routes: {
             AppRoutes.loginRoute: (context) => const LoginScreen(),
             AppRoutes.registerRoute: (context) => const RegisterScreen(),
-            
+            AppRoutes.homeRoute:(context) => const HomeScreen(),
           },
         );
       },

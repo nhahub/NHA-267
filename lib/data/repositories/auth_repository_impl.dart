@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:depi_graduation_project/core/failures/failures.dart';
+import 'package:depi_graduation_project/domain/entities/LoginResponseEntity.dart';
 import 'package:depi_graduation_project/domain/entities/RegisterResponseEntity.dart';
 import 'package:depi_graduation_project/domain/repositories/data_source/remote_data_source/auth_remote_data_source.dart';
 import 'package:depi_graduation_project/domain/repositories/repositories/auth_repostiory.dart';
@@ -18,6 +19,14 @@ class AuthRepositoryImpl implements AuthRepository {
         name, email, password, rePassword, phone);
   return  either.fold((error) => Left(error),
             (response) => Right(response));
+  }
+
+  @override
+  Future<Either<Failers, LoginResponseEntity>> Login(String email, String password) async{
+  var either =await authRemoteDataSource.Login(email, password);
+  return either.fold((error) => Left(error),
+          (response) => Right(response));
+
   }
 
 }

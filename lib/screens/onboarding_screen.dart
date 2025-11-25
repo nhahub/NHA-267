@@ -107,8 +107,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     // ارتفاع الـ Curve ثابت
     const curveHeight = 150.0; // تقليل الارتفاع لتحرير مساحة أكبر
 
-    final bottomPosition = 0.0;
-    final hiddenPosition = -curveHeight;
+    const bottomPosition = 0.0;
+    const hiddenPosition = -curveHeight;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -131,7 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               onPressed: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
+                    builder: (context) => const LoginScreen(),
                   ),
                 );
               },
@@ -180,7 +180,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           if (_currentPageIndex == onboardingData.length - 1) {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
+                                builder: (context) => const LoginScreen(),
                               ),
                             );
                           } else {

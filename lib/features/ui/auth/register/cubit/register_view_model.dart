@@ -14,22 +14,26 @@ class RegisterViewModel extends Cubit<RegisterStates> {
       : super(RegisterInitialState());
 
   //todo : hold data - handle logic
-  TextEditingController fullNameController = TextEditingController(text :"michael william");
-  TextEditingController phoneController = TextEditingController(text:"01270645990");
-  TextEditingController emailController = TextEditingController(text: "mw6873190@gmail.com");
-  TextEditingController passwordController = TextEditingController(text: "1717mmm1717@#");
-  TextEditingController rePasswordController = TextEditingController(text: "1717mmm1717@#");
+  TextEditingController fullNameController = TextEditingController(text :"انا احمد");
+  TextEditingController phoneController = TextEditingController(text:"01234567890");
+  TextEditingController emailController = TextEditingController(text: "test.test@gmail.com");
+  TextEditingController passwordController = TextEditingController(text: "123@#%^&ahmed");
+  TextEditingController rePasswordController = TextEditingController(text: "123@#%^&ahmed");
   var formKey = GlobalKey<FormState>();
 
   void register() async {
     if (formKey.currentState?.validate() == true) {
       emit(RegisterLoadingState());
+
+      // هنا الترتيب الصحيح
       var either = await registerUseCase.invoke(
-          fullNameController.text,
-          emailController.text,
-          phoneController.text,
-          passwordController.text,
-          rePasswordController.text);
+        fullNameController.text,   // 1. الاسم
+        emailController.text,      // 2. الإيميل
+        passwordController.text,   // 3. الباسورد (تأكد إنه التالت)
+        rePasswordController.text, // 4. إعادة الباسورد
+        phoneController.text,      // 5. الهاتف (تأكد إنه الخامس والأخير)
+      );
+
       either.fold((error) {
         emit(RegisterErrorState(failers : error));
       }, (response) {

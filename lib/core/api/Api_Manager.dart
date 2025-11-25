@@ -6,7 +6,15 @@ import 'api_constants.dart';
 
 @singleton
 class ApiManager {
-  Dio dio = Dio();
+  Dio dio = Dio()
+    ..interceptors.add(LogInterceptor(
+      request: true,
+      requestHeader: true,
+      requestBody: true,  // ⬅️ ده هيورينا البيانات اللي مبعوتة بالظبط
+      responseHeader: true,
+      responseBody: true, // ⬅️ ده هيورينا رد السيرفر بالتفصيل
+      error: true,
+    ));
 
   Future<Response> getData({
     required String endpoint,
