@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../utils/constants.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_styles.dart';
 import '../../../domain/repositories/auth_repository_impl.dart';
@@ -113,7 +112,7 @@ class _HomeScreenPlaceholderState extends State<HomeScreenPlaceholder> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('صباح الخير', style: AppStyles.regular16Text.copyWith(color: AppColors.primaryDark)),
-              Text('$_userName', style: AppStyles.medium20White.copyWith(color: AppColors.primaryColor)),
+              Text(_userName, style: AppStyles.medium20White.copyWith(color: AppColors.primaryColor)),
               SizedBox(height: 10.h),
 
               GestureDetector(
