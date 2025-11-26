@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'core/cache/SharedPreference.dart';
 import 'DI/DI.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/app_theme.dart';
-import 'features/ui/screens/splash_screen.dart';
+
+import 'screens/splash_screen.dart';
+
+// (إمبورت شاشة تسجيل الدخول)
 import 'features/ui/auth/Login/login_screen.dart';
-import 'features/ui/screens/home_screen.dart';
+import 'features/ui/pages/home_screen/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +22,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
 
   await SharedPreferenceUtils.init();
+
 
   configureDependencies();
 
@@ -34,12 +39,12 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
+
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'دليلك للإيجار',
 
-          theme: AppTheme.lightTheme,
-          // 💡 استخدام الـ Theme المعرّف
+          theme: AppTheme.lightTheme, // 💡 استخدام الـ Theme المعرّف
 
           locale: const Locale('ar'),
           localizationsDelegates: const [
@@ -64,7 +69,7 @@ class MyApp extends StatelessWidget {
           routes: {
             AppRoutes.loginRoute: (context) => const LoginScreen(),
             AppRoutes.registerRoute: (context) => const RegisterScreen(),
-            AppRoutes.homeRoute: (context) => const HomeScreen(),
+            AppRoutes.homeRoute:(context) => const HomeScreen(),
           },
         );
       },
