@@ -9,12 +9,11 @@ import 'core/cache/SharedPreference.dart';
 import 'DI/DI.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/app_theme.dart';
-
-import 'screens/splash_screen.dart';
+import 'core/utils/theme_manager.dart';
 
 // (إمبورت شاشة تسجيل الدخول)
 import 'features/ui/auth/Login/login_screen.dart';
-import 'features/ui/pages/home_screen/home_screen.dart';
+import 'features/ui/pages/home_screen/home_screen.dart' as full_home;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +21,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
 
   await SharedPreferenceUtils.init();
+  await ThemeManager.init();
 
 
   configureDependencies();
@@ -40,36 +40,43 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
 
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'دليلك للإيجار',
+        return ValueListenableBuilder<bool>(
+          valueListenable: ThemeManager.isDark,
+          builder: (context, isDark, _) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'دليلك للإيجار',
 
-          theme: AppTheme.lightTheme, // 💡 استخدام الـ Theme المعرّف
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
 
-          locale: const Locale('ar'),
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en'),
-            Locale('ar'),
-          ],
+              locale: const Locale('ar'),
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en'),
+                Locale('ar'),
+              ],
 
-          builder: (context, widget) {
-            return Directionality(
-              textDirection: TextDirection.rtl,
-              child: widget!,
+              builder: (context, widget) {
+                return Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: widget!,
+                );
+              },
+
+              home: const full_home.HomeScreen(),
+
+              routes: {
+                AppRoutes.loginRoute: (context) => const LoginScreen(),
+                AppRoutes.registerRoute: (context) => const RegisterScreen(),
+                AppRoutes.homeRoute: (context) => const full_home.HomeScreen(),
+              },
             );
-          },
-
-          home: const SplashScreen(),
-
-          routes: {
-            AppRoutes.loginRoute: (context) => const LoginScreen(),
-            AppRoutes.registerRoute: (context) => const RegisterScreen(),
-            AppRoutes.homeRoute:(context) => const HomeScreen(),
           },
         );
       },
