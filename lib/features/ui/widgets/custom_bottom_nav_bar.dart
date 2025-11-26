@@ -21,9 +21,9 @@ class CustomBottomNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(icon: Icons.home_outlined, label: "Home", index: 0),
-            _buildNavItem(icon: Icons.person_outline, label: "Profile", index: 1),
-            _buildNavItem(icon: Icons.settings_outlined, label: "Settings", index: 2),
+            _buildNavItem(icon: Icons.home_outlined, label: "الرئيسية", index: 0),
+            _buildNavItem(icon: Icons.person_outline, label: "الملف الشخصي", index: 1),
+            _buildNavItem(icon: Icons.settings_outlined, label: "الإعدادات", index: 2),
           ],
         ),
       ),
