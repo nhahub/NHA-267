@@ -1,11 +1,11 @@
 import 'package:depi_graduation_project/core/utils/app_colors.dart';
-import 'package:depi_graduation_project/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:depi_graduation_project/core/utils/app_styles.dart';
-import 'package:depi_graduation_project/screens/Search_screen.dart';
-import 'package:depi_graduation_project/screens/Categories_screen.dart';
-import 'package:depi_graduation_project/screens/Settings_Screen.dart';
+import '../../screens/Categories_screen.dart';
+import '../../screens/Search_screen.dart';
+import '../../screens/Settings_Screen.dart';
+import '../../screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'home_screen';

@@ -10,11 +10,11 @@ import 'DI/DI.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/app_theme.dart';
 
-import 'screens/splash_screen.dart';
 
 // (إمبورت شاشة تسجيل الدخول)
 import 'features/ui/auth/Login/login_screen.dart';
 import 'features/ui/pages/home_screen/home_screen.dart';
+import 'features/ui/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
