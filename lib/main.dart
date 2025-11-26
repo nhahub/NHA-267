@@ -11,11 +11,9 @@ import 'core/utils/app_routes.dart';
 import 'core/utils/app_theme.dart';
 import 'core/utils/theme_manager.dart';
 
-import 'screens/splash_screen.dart';
-
 // (إمبورت شاشة تسجيل الدخول)
 import 'features/ui/auth/Login/login_screen.dart';
-import 'features/ui/pages/home_screen/home_screen.dart';
+import 'features/ui/pages/home_screen/home_screen.dart' as full_home;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,12 +69,12 @@ class MyApp extends StatelessWidget {
                 );
               },
 
-              home: const SplashScreen(),
+              home: const full_home.HomeScreen(),
 
               routes: {
                 AppRoutes.loginRoute: (context) => const LoginScreen(),
                 AppRoutes.registerRoute: (context) => const RegisterScreen(),
-                AppRoutes.homeRoute: (context) => const HomeScreen(),
+                AppRoutes.homeRoute: (context) => const full_home.HomeScreen(),
               },
             );
           },
