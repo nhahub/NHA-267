@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart'; // 💡 استيراد ضروري
-import '../utils/constants.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import '../../../utils/constants.dart';
 import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {

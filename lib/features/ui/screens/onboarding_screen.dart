@@ -1,9 +1,9 @@
 import 'package:depi_graduation_project/features/ui/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../utils/constants.dart';
+import '../../../utils/constants.dart';
 
-import '../core/models/onboarding_model.dart';
+import '../../../core/models/onboarding_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // 💡 إضافة ScreenUtil
 
 class OnboardingScreen extends StatefulWidget {
