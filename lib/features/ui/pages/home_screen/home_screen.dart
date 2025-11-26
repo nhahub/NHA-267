@@ -4,6 +4,7 @@ import '../../../../core/cache/SharedPreference.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../widgets/custom_bottom_nav_bar.dart';
+
 //import 'profile_screen.dart'; // تأكد إن الملف ده موجود
 // import '../features/ui/widgets/custom_bottom_nav_bar.dart'; // لو عندك الناف بار
 // استيراد الصفحات الأخرى (لو مش موجودة لسه، سيبها كومنت)
@@ -33,7 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // دالة بسيطة لجلب الاسم من الكاش
   void _loadUserName() async {
     // هنجيب الاسم اللي حفظناه وقت اللوجن
-    String? name = SharedPreferenceUtils.getData(key: 'name') as String?;    // SharedPreferenceUtils.getData(key: 'name');
+    String? name = SharedPreferenceUtils.getData(key: 'name')
+        as String?; // SharedPreferenceUtils.getData(key: 'name');
     if (name != null) {
       setState(() {
         _userName = name.split(' ').first; // بناخد الاسم الأول بس
@@ -75,7 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: AppColors.primaryColor.withOpacity(0.1),
-                      child: const Center(child: Icon(Icons.image, color: AppColors.primaryColor)),
+                      child: const Center(
+                          child:
+                              Icon(Icons.image, color: AppColors.primaryColor)),
                     ),
                   ),
                 ),
@@ -86,7 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.symmetric(vertical: 10.h),
                   child: Text(
                     title,
-                    style: AppStyles.medium20White.copyWith(color: AppColors.fontColor),
+                    style: AppStyles.medium20White
+                        .copyWith(color: AppColors.fontColor),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.right,
@@ -110,20 +115,27 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('صباح الخير', style: AppStyles.regular16Text.copyWith(color: AppColors.primaryColor)),
-              Text(_userName, style: AppStyles.medium20White.copyWith(color: AppColors.primaryColor)),
+              Text('صباح الخير',
+                  style: AppStyles.regular16Text
+                      .copyWith(color: AppColors.primaryColor)),
+              Text(_userName,
+                  style: AppStyles.medium20White
+                      .copyWith(color: AppColors.primaryColor)),
               SizedBox(height: 10.h),
               GestureDetector(
                 onTap: () {
                   // فتح شاشة الإعدادات
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.primaryColor.withOpacity(0.5)),
+                    border: Border.all(
+                        color: AppColors.primaryColor.withOpacity(0.5)),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
-                  child: Text('الإعدادات', style: AppStyles.medium14PrimaryDark),
+                  child:
+                      Text('الإعدادات', style: AppStyles.medium14PrimaryDark),
                 ),
               ),
             ],
@@ -147,7 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      body: SafeArea( // ضفنا SafeArea عشان الهيدر مايدخلش في نوتش الموبايل
+      body: SafeArea(
+        // ضفنا SafeArea عشان الهيدر مايدخلش في نوتش الموبايل
         child: CustomScrollView(
           slivers: [
             SliverList(
@@ -155,7 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 [
                   _buildCustomHeader(),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                     child: Column(
                       children: [
                         // 1. القوانين
@@ -204,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-           // Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
         },
         backgroundColor: AppColors.primaryColor,
         elevation: 4.0,
@@ -218,7 +232,6 @@ class _HomeScreenState extends State<HomeScreen> {
           // التنقل بين الصفحات
         },
       ),
-
     );
   }
 }
