@@ -1,5 +1,4 @@
 import 'package:depi_graduation_project/core/failures/failures.dart';
-import 'package:depi_graduation_project/domain/entities/RegisterResponseEntity.dart';
 
 import '../../../../../domain/entities/LoginResponseEntity.dart';
 

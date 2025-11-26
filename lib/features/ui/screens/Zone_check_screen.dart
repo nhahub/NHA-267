@@ -1,10 +1,6 @@
 import 'package:depi_graduation_project/features/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import '../../../core/utils/app_colors.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
-import 'laws_screen.dart';
-import 'unit_request_screen.dart';
-import 'annual_increase_screen.dart';
 import 'profile_screen.dart';
 
 class ZoneCheckScreen extends StatelessWidget {

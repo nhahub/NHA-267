@@ -6,7 +6,6 @@ import 'package:depi_graduation_project/core/api/end_points.dart';
 import 'package:depi_graduation_project/core/failures/failures.dart';
 import 'package:depi_graduation_project/data/model/LoginResponseDM.dart';
 import 'package:depi_graduation_project/data/model/RegisterResponseDM.dart';
-import 'package:depi_graduation_project/domain/entities/LoginResponseEntity.dart';
 
 import 'package:injectable/injectable.dart';
 

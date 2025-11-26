@@ -1,11 +1,11 @@
 import 'package:depi_graduation_project/core/utils/app_colors.dart';
-import 'package:depi_graduation_project/screens/profile_screen.dart';
+import 'package:depi_graduation_project/features/ui/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:depi_graduation_project/core/utils/app_styles.dart';
-import 'package:depi_graduation_project/screens/Search_screen.dart';
-import 'package:depi_graduation_project/screens/Categories_screen.dart';
-import 'package:depi_graduation_project/screens/Settings_Screen.dart';
+import 'package:depi_graduation_project/features/ui/screens/Search_screen.dart';
+import 'package:depi_graduation_project/features/ui/screens/Categories_screen.dart';
+import 'package:depi_graduation_project/features/ui/screens/Settings_Screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'home_screen';
@@ -28,9 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _pages = [
       const _HomeContent(),
-      SearchScreen(onBack: () => _onBackPressed()),
-      CategoriesScreen(onBack: () => _onBackPressed()),
-      SettingsScreen(onBack: () => _onBackPressed()),
+      SearchScreen(onBack: _onBackPressed),
+      CategoriesScreen(onBack: _onBackPressed),
+      SettingsScreen(onBack: _onBackPressed),
     ];
   }
 

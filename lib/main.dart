@@ -9,8 +9,9 @@ import 'core/cache/SharedPreference.dart';
 import 'DI/DI.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/app_theme.dart';
+import 'core/utils/theme_manager.dart';
 
-import 'screens/splash_screen.dart';
+import 'features/ui/screens/splash_screen.dart';
 
 // (إمبورت شاشة تسجيل الدخول)
 import 'features/ui/auth/Login/login_screen.dart';
@@ -22,7 +23,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
 
   await SharedPreferenceUtils.init();
-
+  await ThemeManager.init();
 
   configureDependencies();
 
@@ -39,37 +40,38 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'دليلك للإيجار',
-
-          theme: AppTheme.lightTheme, // 💡 استخدام الـ Theme المعرّف
-
-          locale: const Locale('ar'),
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en'),
-            Locale('ar'),
-          ],
-
-          builder: (context, widget) {
-            return Directionality(
-              textDirection: TextDirection.rtl,
-              child: widget!,
+        return ValueListenableBuilder<bool>(
+          valueListenable: ThemeManager.isDark,
+          builder: (context, isDark, _) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'دليلك للإيجار',
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+              locale: const Locale('ar'),
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en'),
+                Locale('ar'),
+              ],
+              builder: (context, widget) {
+                return Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: widget!,
+                );
+              },
+              home: const SplashScreen(),
+              routes: {
+                AppRoutes.loginRoute: (context) => const LoginScreen(),
+                AppRoutes.registerRoute: (context) => const RegisterScreen(),
+                AppRoutes.homeRoute:(context) => const HomeScreen(),
+              },
             );
-          },
-
-          home: const SplashScreen(),
-
-          routes: {
-            AppRoutes.loginRoute: (context) => const LoginScreen(),
-            AppRoutes.registerRoute: (context) => const RegisterScreen(),
-            AppRoutes.homeRoute:(context) => const HomeScreen(),
           },
         );
       },

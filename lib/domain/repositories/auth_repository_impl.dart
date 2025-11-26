@@ -13,7 +13,6 @@ class AuthRepositoryImpl implements AuthRepository {
   // ----------------------------------------------------
   // 1. التسجيل (Mock) - نقوم بحفظ الاسم هنا
   // ----------------------------------------------------
-  @override
   Future<Either<String, void>> registerUser({
     required String fullName,
     required String email,
@@ -35,7 +34,6 @@ class AuthRepositoryImpl implements AuthRepository {
   // ----------------------------------------------------
   // 2. تسجيل الدخول (Mock) - نقوم بحفظ الاسم هنا
   // ----------------------------------------------------
-  @override
   Future<Either<String, void>> loginUser({
     required String username,
     required String password,

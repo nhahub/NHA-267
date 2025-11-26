@@ -1,6 +1,4 @@
-import 'package:depi_graduation_project/domain/use_case/register_use_case.dart';
 import 'package:depi_graduation_project/features/ui/auth/login/cubit/login_states.dart';
-import 'package:depi_graduation_project/features/ui/auth/register/cubit/register_States.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
