@@ -1,99 +1,87 @@
+import 'package:depi_graduation_project/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:depi_graduation_project/screens/Search_screen.dart';
-import 'package:depi_graduation_project/screens/Categories_screen.dart';
-import 'package:depi_graduation_project/screens/Settings_Screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = 'home_screen';
+class HomeScreen extends StatelessWidget {
+  static const String routeName = 'home_screen'; // اسم الروت
 
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-
-  final List<int> _history = [];
-
-  late final List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = [
-      const _HomeContent(),
-      SearchScreen(onBack: () => _onBackPressed()),
-      CategoriesScreen(onBack: () => _onBackPressed()),
-      SettingsScreen(onBack: () => _onBackPressed()),
-    ];
-  }
-
-  void _onTap(int index) {
-    if (index == _currentIndex) return;
-    setState(() {
-      _history.add(_currentIndex);
-      _currentIndex = index;
-    });
-  }
-
-  void _onBackPressed() {
-    if (_history.isNotEmpty) {
-      setState(() {
-        _currentIndex = _history.removeLast();
-      });
-    } else {
-      Navigator.pop(context);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
-      bottomNavigationBar: Directionality(
-        textDirection: TextDirection.ltr,
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTap,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Theme.of(context).colorScheme.secondary,
-          unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          selectedFontSize: 12,
-          unselectedFontSize: 12,
-          selectedIconTheme: IconThemeData(size: 22, color: Theme.of(context).colorScheme.secondary),
-          unselectedIconTheme: IconThemeData(size: 20, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
-          items: [
-            BottomNavigationBarItem(icon: const Icon(Icons.home), label: 'الرئيسية'),
-            BottomNavigationBarItem(icon: const Icon(Icons.search), label: 'بحث'),
-            BottomNavigationBarItem(icon: const Icon(Icons.grid_view), label: 'الفئات'),
-            BottomNavigationBarItem(icon: const Icon(Icons.settings), label: 'الاعدادات'),
+      backgroundColor: AppColors.whiteColor,
+      body: SafeArea( // ضفنا SafeArea عشان الهيدر مايدخلش في نوتش الموبايل
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  _buildCustomHeader(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                    child: Column(
+                      children: [
+                        // 1. القوانين
+                        _buildServiceItem(
+                          title: 'القوانين',
+                          imagePath: 'assets/images/laws.png',
+                          onTap: () {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => const LawsScreen()));
+                          },
+                        ),
+                        // 2. معرفة فئة منطقتك
+                        _buildServiceItem(
+                          title: 'معرفه فئه منطقتك',
+                          imagePath: 'assets/images/zone.png',
+                          onTap: () {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => const ZoneCheckScreen()));
+                          },
+                        ),
+                        // 3. طلب وحدة سكنية
+                        _buildServiceItem(
+                          title: 'طلب وحدة سكنية',
+                          imagePath: 'assets/images/building.png',
+                          onTap: () {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => const UnitRequestScreen()));
+                          },
+                        ),
+                        // 4. حساب الزيادة السنوية
+                        _buildServiceItem(
+                          title: 'حساب الزيادة السنوية',
+                          imagePath: 'assets/images/increase.png',
+                          onTap: () {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => const AnnualIncreaseScreen()));
+                          },
+                        ),
+                        SizedBox(height: 70.h),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-    );
-  }
-}
+      // لو عندك CustomBottomNavBar الغي الكومنت من هنا
 
-class _HomeContent extends StatelessWidget {
-  const _HomeContent({Key? key}) : super(key: key);
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+           // Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+        },
+        backgroundColor: AppColors.primaryColor,
+        elevation: 4.0,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.person, color: AppColors.whiteColor, size: 30),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          // التنقل بين الصفحات
+        },
+      ),
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home Screen"),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          "مبروك! تم تسجيل الدخول بنجاح 🎉",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 }
