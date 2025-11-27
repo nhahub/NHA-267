@@ -15,7 +15,7 @@ import 'core/utils/app_theme.dart';
 import 'features/ui/auth/Login/login_screen.dart';
 import 'features/ui/pages/home_screen/home_screen.dart';
 import 'features/ui/screens/splash_screen.dart';
-
+import 'features/ui/screens/Settings_Screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
