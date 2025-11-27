@@ -8,6 +8,7 @@ import '../../screens/laws_screen.dart';
 import '../../screens/unit_request_screen.dart';
 import '../../screens/profile_screen.dart';
 import '../../screens/settings_screen.dart';
+import '../../widgets/custom_bottom_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,17 +18,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
 
   void _onTap(int index) {
-    setState(() {
-      _currentIndex = index;
-      if (index == 1) {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
-      } else if (index == 2) {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()));
-      }
-    });
+    // 🟦 الهوم
+    if (index == 0) {
+      return;
+    }
+
+    // 🟩 البروفايل
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+      );
+    }
+
+    // 🟨 الإعدادات
+    else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const SettingsScreen()),
+      );
+    }
   }
 
   Widget _buildCustomHeader() {
@@ -40,8 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('صباح الخير', style: AppStyles.regular16Text.copyWith(color: AppColors.primaryColor)),
-              Text('مستخدم', style: AppStyles.medium20White.copyWith(color: AppColors.primaryColor)),
+              Text('صباح الخير',
+                  style: AppStyles.regular16Text.copyWith(
+                    color: AppColors.primaryColor,
+                  )),
+              Text('مستخدم',
+                  style: AppStyles.medium20White.copyWith(
+                    color: AppColors.primaryColor,
+                  )),
               SizedBox(height: 10.h),
             ],
           ),
@@ -97,7 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Text(
                   title,
-                  style: AppStyles.medium18Header.copyWith(color: AppColors.fontColor),
+                  style: AppStyles.medium18Header
+                      .copyWith(color: AppColors.fontColor),
                 ),
               ),
               const Icon(Icons.arrow_forward_ios, size: 20),
@@ -116,60 +135,66 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CustomScrollView(
           slivers: [
             SliverList(
-              delegate: SliverChildListDelegate([
-                _buildCustomHeader(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                  child: Column(
-                    children: [
-                      _buildServiceItem(
-                        title: 'القوانين',
-                        imagePath: 'assets/images/laws.png',
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const LawsScreen()));
-                        },
-                      ),
-                      _buildServiceItem(
-                        title: 'معرفة فئة منطقتك',
-                        imagePath: 'assets/images/zone.png',
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const ZoneCheckScreen()));
-                        },
-                      ),
-                      _buildServiceItem(
-                        title: 'طلب وحدة سكنية',
-                        imagePath: 'assets/images/building.png',
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const UnitRequestScreen()));
-                        },
-                      ),
-                      _buildServiceItem(
-                        title: 'حساب الزيادة السنوية',
-                        imagePath: 'assets/images/increase.png',
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const AnnualIncreaseScreen()));
-                        },
-                      ),
-                      SizedBox(height: 70.h),
-                    ],
+              delegate: SliverChildListDelegate(
+                [
+                  _buildCustomHeader(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                    child: Column(
+                      children: [
+                        _buildServiceItem(
+                          title: 'القوانين',
+                          imagePath: 'assets/images/laws.png',
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (_) => const LawsScreen()));
+                          },
+                        ),
+                        _buildServiceItem(
+                          title: 'معرفة فئة منطقتك',
+                          imagePath: 'assets/images/zone.png',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const ZoneCheckScreen()));
+                          },
+                        ),
+                        _buildServiceItem(
+                          title: 'طلب وحدة سكنية',
+                          imagePath: 'assets/images/building.png',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const UnitRequestScreen()));
+                          },
+                        ),
+                        _buildServiceItem(
+                          title: 'حساب الزيادة السنوية',
+                          imagePath: 'assets/images/increase.png',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const AnnualIncreaseScreen()));
+                          },
+                        ),
+                        SizedBox(height: 70.h),
+                      ],
+                    ),
                   ),
-                ),
-              ]),
+                ],
+              ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+
+      // 🟦 هنا أهم تغيير
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: 0,
         onTap: _onTap,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.primaryColor,
-        unselectedItemColor: AppColors.fontColor.withOpacity(0.6),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'الملف الشخصي'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'الإعدادات'),
-        ],
       ),
     );
   }
