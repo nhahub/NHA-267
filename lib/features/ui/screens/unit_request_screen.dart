@@ -1,7 +1,7 @@
-import 'package:depi_graduation_project/features/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_styles.dart';
+import '../pages/home_screen/home_screen.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 import 'laws_screen.dart';
 import 'zone_check_screen.dart';
