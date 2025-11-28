@@ -4,25 +4,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'core/cache/SharedPreference.dart';
 import 'DI/DI.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/app_theme.dart';
 
-
 // (إمبورت شاشة تسجيل الدخول)
 import 'features/ui/auth/Login/login_screen.dart';
+import 'features/ui/auth/forgot/forgot_password_screen.dart';
+import 'features/ui/auth/forgot/verify_otp_screen.dart';
 import 'features/ui/pages/home_screen/home_screen.dart';
 import 'features/ui/screens/splash_screen.dart';
 import 'features/ui/screens/Settings_Screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   Bloc.observer = MyBlocObserver();
 
   await SharedPreferenceUtils.init();
-
 
   configureDependencies();
 
@@ -39,7 +47,6 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'دليلك للإيجار',
@@ -69,7 +76,11 @@ class MyApp extends StatelessWidget {
           routes: {
             AppRoutes.loginRoute: (context) => const LoginScreen(),
             AppRoutes.registerRoute: (context) => const RegisterScreen(),
-            AppRoutes.homeRoute:(context) => const HomeScreen(),
+            AppRoutes.forgotPasswordRoute: (context) =>
+                const ForgotPasswordScreen(),
+            '${AppRoutes.forgotPasswordRoute}/verify': (context) =>
+                const VerifyOtpScreen(),
+            AppRoutes.homeRoute: (context) => const HomeScreen(),
           },
         );
       },

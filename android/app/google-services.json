@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1028622809100",
+    "project_id": "forgotpassword-12365",
+    "storage_bucket": "forgotpassword-12365.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028622809100:android:345c69d632cdf09995d629",
+        "android_client_info": {
+          "package_name": "com.example.depi_graduation_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrogDgI-DV4bcAbO9jNZ5-5hbZ-YpUUEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
