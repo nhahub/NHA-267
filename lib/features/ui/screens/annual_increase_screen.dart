@@ -327,7 +327,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                     ),
                     SizedBox(height: 12.h),
                     _buildInfoPoint(
-                        'منطقة متميزة: الإيجار × 20 (الحد الأدنى 1000 جنيه)'),
+                        'منطقة متميزة: الإيجار × 20 (الحد الأدنى 1000 جنيه)'), //da
                     _buildInfoPoint(
                         'منطقة متوسطة: الإيجار × 10 (الحد الأدنى 400 جنيه)'),
                     _buildInfoPoint(
