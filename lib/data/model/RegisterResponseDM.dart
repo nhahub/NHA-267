@@ -15,7 +15,7 @@ class RegisterResponseDm extends RegisterResponseEntity {
 }
 
 class UserDM extends UserEntity {
-  // لاحظ: شيلنا الباسورد من هنا كمان عشان يطابق الـ UserEntity
+  //  UserEntity
   UserDM({
     super.id,
     super.name,

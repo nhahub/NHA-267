@@ -41,7 +41,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               "rePassword": rePassword,
               "phone": phone
             },
-            // 🔴 ضروري جداً: نضيف الهيدر هنا كمان عشان التسجيل ينجح
             headers: {
               'Content-Type': 'application/json',
             });

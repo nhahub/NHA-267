@@ -23,6 +23,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.primaryColor;
+    Color fieldColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    Color textColor = Colors.white;
+
     return BlocListener<ForgotViewModel, ForgotStates>(
       bloc: viewModel,
       listener: (context, state) {
@@ -31,6 +36,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         } else {
           DialogUtils.hideLoading(context);
         }
+
         if (state is ForgotOtpSentState) {
           DialogUtils.showMessage(
             context: context,
@@ -53,10 +59,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: backgroundColor,
         appBar: AppBar(
           title: const Text('استعادة كلمة المرور'),
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: backgroundColor,
+          elevation: 0,
           foregroundColor: Colors.white,
         ),
         body: SafeArea(
@@ -68,35 +75,55 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    SizedBox(height: 40.h),
+
+                    Icon(
+                      Icons.lock_reset,
+                      size: 80.sp,
+                      color: Colors.white,
+                    ),
                     SizedBox(height: 24.h),
+
                     Text(
-                      'ادخل رقم الهاتف المرتبط بحسابك',
+                      'ادخل رقم الهاتف المرتبط بحسابك\nلاستلام كود التحقق',
                       style: AppStyles.semi20Primary
-                          .copyWith(color: AppColors.whiteColor),
+                          .copyWith(color: textColor, fontSize: 16.sp),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 30.h),
+
                     TextFormField(
                       controller: viewModel.phoneController,
                       keyboardType: TextInputType.phone,
                       validator: AppValidators.validatePhoneNumber,
+                      style: TextStyle(color: isDark ? Colors.white : Colors.black), // لون الكتابة
                       decoration: InputDecoration(
                         hintText: 'رقم الهاتف',
-                        fillColor: Colors.white,
+                        hintStyle: TextStyle(color: Colors.grey),
+                        fillColor: fieldColor,
                         filled: true,
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12.r)),
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none),
+                        prefixIcon: const Icon(Icons.phone_android, color: Colors.grey),
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 40.h),
+
                     ElevatedButton(
                       onPressed: viewModel.sendOtp,
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 14.h),
-                        backgroundColor: AppColors.whiteColor,
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        backgroundColor: Colors.white,
                         foregroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
-                      child: const Text('إرسال الكود'),
+                      child: Text(
+                        'إرسال الكود',
+                        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
