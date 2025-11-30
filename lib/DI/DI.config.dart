@@ -21,6 +21,10 @@ import '../domain/repositories/data_source/remote_data_source/auth_remote_data_s
 import '../domain/repositories/repositories/auth_repostiory.dart' as _i66;
 import '../domain/use_case/login_use_case.dart' as _i772;
 import '../domain/use_case/register_use_case.dart' as _i224;
+import '../domain/use_case/reset_password_use_case.dart' as _i276;
+import '../domain/use_case/send_otp_use_case.dart' as _i508;
+import '../domain/use_case/verify_otp_use_case.dart' as _i484;
+import '../features/ui/auth/forgot/cubit/forgot_view_model.dart' as _i549;
 import '../features/ui/auth/login/cubit/login_View_Model.dart' as _i902;
 import '../features/ui/auth/register/cubit/register_view_model.dart' as _i586;
 
@@ -42,12 +46,23 @@ extension GetItInjectableX on _i174.GetIt {
         authRemoteDataSource: gh<_i521.AuthRemoteDataSource>()));
     gh.factory<_i224.RegisterUseCase>(
         () => _i224.RegisterUseCase(gh<_i66.AuthRepository>()));
+    gh.factory<_i276.ResetPasswordUseCase>(
+        () => _i276.ResetPasswordUseCase(gh<_i66.AuthRepository>()));
+    gh.factory<_i508.SendOtpUseCase>(
+        () => _i508.SendOtpUseCase(gh<_i66.AuthRepository>()));
+    gh.factory<_i484.VerifyOtpUseCase>(
+        () => _i484.VerifyOtpUseCase(gh<_i66.AuthRepository>()));
     gh.factory<_i772.LoginUseCase>(
         () => _i772.LoginUseCase(authRepository: gh<_i66.AuthRepository>()));
     gh.factory<_i586.RegisterViewModel>(() =>
         _i586.RegisterViewModel(registerUseCase: gh<_i224.RegisterUseCase>()));
     gh.factory<_i902.LoginViewModel>(
         () => _i902.LoginViewModel(loginUseCase: gh<_i772.LoginUseCase>()));
+    gh.factory<_i549.ForgotViewModel>(() => _i549.ForgotViewModel(
+          sendOtpUseCase: gh<_i508.SendOtpUseCase>(),
+          verifyOtpUseCase: gh<_i484.VerifyOtpUseCase>(),
+          resetPasswordUseCase: gh<_i276.ResetPasswordUseCase>(),
+        ));
     return this;
   }
 }
