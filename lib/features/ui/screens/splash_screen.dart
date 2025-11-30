@@ -17,11 +17,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // 💡 إخفاء شاشة الإطلاق الأصلية فوراً بمجرد ظهور شاشة Flutter
     FlutterNativeSplash.remove();
 
-    // 1. بدء حركة تغيير اللون وحجم اللوجو
-    // (تم تقليل المدة لـ 100ms للبدء فور إزالة الشاشة الأصلية)
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
         setState(() {
@@ -30,12 +27,10 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
 
-    // 2. التنقل: يتم بعد انتهاء مدة الحركة + وقت فاصل
     _navigateToNextScreen();
   }
 
   void _navigateToNextScreen() async {
-    // ننتظر مدة الحركة (1000ms) + وقت فاصل (300ms) = 1300ms
     await Future.delayed(kAnimationDuration + const Duration(milliseconds: 300));
 
     if (mounted) {
@@ -53,10 +48,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return AnimatedContainer(
       duration: kAnimationDuration,
       curve: Curves.easeInOut,
-      // الخلفية تتغير من الأبيض إلى الأزرق
       color: _isAnimated ? kPrimaryColor : Colors.white,
 
-      // 💡 الحل النهائي: نغلف المحتوى بـ SafeArea
       child: SafeArea(
         child: Center(
           child: AnimatedOpacity(

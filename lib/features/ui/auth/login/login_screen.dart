@@ -11,7 +11,7 @@ import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/utils/app_validators.dart';
 import '../../../../core/utils/dialog_utils.dart';
-// تم حذف import الـ Repository لأنه غير مستخدم
+
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 
@@ -26,9 +26,15 @@ class _LoginScreenState extends State<LoginScreen> {
   LoginViewModel viewModel = getIt<LoginViewModel>();
   bool isPasswordVisible = false;
 
-
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.primaryColor;
+
+    Color fieldColor = isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor;
+
+
     return BlocListener<LoginViewModel, LoginStates>(
       bloc: viewModel,
       listener: (context, state) {
@@ -41,34 +47,38 @@ class _LoginScreenState extends State<LoginScreen> {
               message: state.failers.ErrorMsg,
               title: 'Error',
               posActionName: 'Ok');
-       }else if (state is LoginSuccessState) {
+        } else if (state is LoginSuccessState) {
           DialogUtils.hideLoading(context);
 
-          // 1. احفظ التوكن
-          SharedPreferenceUtils.saveData(key: 'token', value: state.responseEntity.token);
-
+          SharedPreferenceUtils.saveData(
+              key: 'token', value: state.responseEntity.token);
+          var user = state.responseEntity.user;
+          if (user != null) {
+            SharedPreferenceUtils.saveData(key: 'name', value: user.name);
+            SharedPreferenceUtils.saveData(key: 'email', value: user.email);
+            SharedPreferenceUtils.saveData(key: 'phone', value: user.phone);
+            print("User Data Saved: ${state.responseEntity.user!.name} - ${state.responseEntity.user!.email}");
+          }
           DialogUtils.showMessage(
               context: context,
               message: "تم تسجيل الدخول بنجاح",
               title: 'نجاح',
               posActionName: 'Ok',
               posAction: () {
-                // 2. روح للـ Home
                 Navigator.pushReplacementNamed(context, AppRoutes.homeRoute);
               });
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // اللوجو
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 91.h,
-                    bottom: 87.h,
+                    top: 50.h,
+                    bottom: 50.h,
                   ),
                   child: SizedBox(
                     height: 120.h,
@@ -110,13 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               CustomTextFormField(
                                 isPassword: false,
-                                keyboardType: TextInputType.emailAddress, // يفضل emailAddress بدل text
+                                keyboardType: TextInputType.emailAddress,
                                 isObscureText: false,
                                 hintText: "أدخل بريدك الالكترونى",
                                 hintStyle: AppStyles.light18HintText,
-                                filledColor: AppColors.whiteColor,
+                                filledColor: fieldColor,
                                 controller: viewModel.emailController,
-                                validator: AppValidators.validateEmail, // تأكد إن ده بيعمل validate للإيميل
+                                validator: AppValidators.validateEmail,
                               ),
                               Text(
                                 "كلمة المرور",
@@ -128,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 isObscureText: !isPasswordVisible,
                                 hintText: "اكتب كلمة المرور",
                                 hintStyle: AppStyles.light18HintText,
-                                filledColor: AppColors.whiteColor,
+                                filledColor: fieldColor,
                                 controller: viewModel.passwordController,
                                 validator: AppValidators.validatePassword,
                                 suffixIcon: IconButton(
@@ -179,14 +189,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                       AppRoutes.registerRoute,
                                     );
                                   },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center, // توسيط النص
-                                    children: [
-                                      Text(
-                                        ' لا تملك حساب؟ أنشئ حساب جديد',
-                                        style: AppStyles.medium18White,
-                                      ),
-                                    ],
+                                  child: Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'لا تملك حساب؟ ',
+                                          style: AppStyles.medium18White,
+                                        ),
+                                        TextSpan(
+                                          text: 'أنشئ حساب جديد',
+                                          style: AppStyles.medium18White.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            decoration: TextDecoration.underline,
+                                            decorationColor: Colors.white,
+                                            decorationThickness: 2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               )

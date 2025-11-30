@@ -20,19 +20,28 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // تم حذف الـ Controllers من هنا لأننا بنستخدم اللي جوه الـ ViewModel
-
-  // متغيرات الـ UI الخاصة بإظهار وإخفاء الباسورد بتبقى Local State عادي
   bool isPasswordVisible = false;
   bool isRePasswordVisible = false;
 
-  // تم حذف الـ AuthRepository لأنه غير مستخدم هنا
-
-  // استدعاء الـ ViewModel
   RegisterViewModel viewModel = getIt<RegisterViewModel>();
 
   @override
   Widget build(BuildContext context) {
+    // 1️⃣ تجهيز ألوان الدارك مود
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // الخلفية: أزرق في الفاتح، أسود في الغامق
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.primaryColor;
+
+    // لون الحقول: أبيض في الفاتح، رمادي غامق في الغامق
+    Color fieldColor = isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor;
+
+    // لون النص جوه الحقل (لو الحقل غامق النص يبقى أبيض)
+    // *ملاحظة: CustomTextFormField عندك محتاج يتأكد إنه بياخد الـ Style من الثيم أو بنعدله*
+
+    // لون العناوين والنصوص الثابتة (أبيض في الحالتين عشان الخلفية يا زرقاء يا سوداء)
+    Color textColor = Colors.white;
+
     return BlocListener<RegisterViewModel, RegisterStates>(
       bloc: viewModel,
       listener: (context, state) {
@@ -42,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           DialogUtils.hideLoading(context);
           DialogUtils.showMessage(
             context: context,
-            message: state.failers.ErrorMsg, // تأكد ان الاسم failure مش failers لو متاح
+            message: state.failers.ErrorMsg,
             title: "حدث خطأ",
             posActionName: "Ok",
           );
@@ -54,14 +63,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               title: "انشاء حساب",
               posActionName: "Ok",
               posAction: () {
-                // يفضل هنا تنقله لصفحة تسجيل الدخول أو الصفحة الرئيسية
                 Navigator.pushReplacementNamed(context, AppRoutes.loginRoute);
-              }
-          );
+              });
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: backgroundColor, // ✅ الخلفية متغيرة
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -76,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: 80.w,
                       child: Image.asset(
                         'assets/images/logo.png',
-                        color: AppColors.whiteColor,
+                        color: textColor, // ✅ اللوجو أبيض دائماً
                         colorBlendMode: BlendMode.srcIn,
                         fit: BoxFit.contain,
                       ),
@@ -86,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Text(
                     "إنشاء حساب جديد",
                     textAlign: TextAlign.center,
-                    style: AppStyles.semi24White,
+                    style: AppStyles.semi24White.copyWith(color: textColor),
                   ),
                   SizedBox(height: 20.h),
                   Form(
@@ -99,7 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           controller: viewModel.fullNameController,
                           hintText: "أدخل اسمك بالكامل",
                           keyboardType: TextInputType.name,
-                          filledColor: AppColors.whiteColor,
+                          filledColor: fieldColor, // ✅ لون الحقل متغير
                           validator: AppValidators.validateFullName,
                         ),
                         _buildLabel("رقم الهاتف"),
@@ -107,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           controller: viewModel.phoneController,
                           hintText: "أدخل رقم هاتفك",
                           keyboardType: TextInputType.phone,
-                          filledColor: AppColors.whiteColor,
+                          filledColor: fieldColor, // ✅ لون الحقل متغير
                           validator: AppValidators.validatePhoneNumber,
                         ),
                         _buildLabel("البريد الإلكتروني"),
@@ -115,14 +122,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           controller: viewModel.emailController,
                           hintText: "أدخل بريدك الإلكتروني",
                           keyboardType: TextInputType.emailAddress,
-                          filledColor: AppColors.whiteColor,
+                          filledColor: fieldColor, // ✅ لون الحقل متغير
                           validator: AppValidators.validateEmail,
                         ),
                         _buildLabel("كلمة المرور"),
                         CustomTextFormField(
                           controller: viewModel.passwordController,
                           hintText: "أدخل كلمة المرور",
-                          filledColor: AppColors.whiteColor,
+                          filledColor: fieldColor, // ✅ لون الحقل متغير
                           isPassword: true,
                           isObscureText: !isPasswordVisible,
                           keyboardType: TextInputType.visiblePassword,
@@ -141,13 +148,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CustomTextFormField(
                           controller: viewModel.rePasswordController,
                           hintText: "أعد إدخال كلمة المرور",
-                          filledColor: AppColors.whiteColor,
+                          filledColor: fieldColor, // ✅ لون الحقل متغير
                           isPassword: true,
                           isObscureText: !isRePasswordVisible,
                           keyboardType: TextInputType.visiblePassword,
-                          // -------------------------------------------------------
-                          // التعديل هنا: المقارنة مع الكنترولر الخاص بالفيو موديل
-                          // -------------------------------------------------------
                           validator: (val) =>
                               AppValidators.validateConfirmPassword(
                                   val, viewModel.passwordController.text),
@@ -163,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         SizedBox(height: 35.h),
                         CustomElevatedButton(
-                          backgroundColor: AppColors.whiteColor,
+                          backgroundColor: AppColors.whiteColor, // ممكن تخليه AppColors.primaryColor في الدارك لو حابب
                           textStyle: AppStyles.semi20Primary,
                           text: "إنشاء حساب",
                           onPressed: () {
@@ -187,7 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   style: AppStyles.medium18White.copyWith(
                                     fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.whiteColor,
+                                    decorationColor: textColor,
                                     decorationThickness: 2,
                                   ),
                                 ),
@@ -214,7 +218,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: EdgeInsets.only(bottom: 8.h, top: 12.h),
       child: Text(
         text,
-        style: AppStyles.medium18White,
+        style: AppStyles.medium18White, // الأبيض هيمشي مع الخلفية السوداء أو الزرقاء
       ),
     );
   }

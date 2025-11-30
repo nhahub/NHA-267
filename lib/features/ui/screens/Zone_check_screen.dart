@@ -24,7 +24,6 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
     "بورسعيد": "متميزة",
     "جنوب سيناء": "متميزة",
     "البحر الأحمر": "متميزة",
-
     // فئة متوسطة
     "القليوبية": "متوسطة",
     "المنوفية": "متوسطة",
@@ -37,7 +36,6 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
     "دمياط": "متوسطة",
     "بني سويف": "متوسطة",
     "الفيوم": "متوسطة",
-
     // فئة اقتصادية
     "الشرقية": "اقتصادية",
     "المنيا": "اقتصادية",
@@ -52,47 +50,35 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
   };
 
   final List<String> governorates = [
-    "القاهرة",
-    "الجيزة",
-    "الإسكندرية",
-    "بورسعيد",
-    "السويس",
-    "الإسماعيلية",
-    "دمياط",
-    "الدقهلية",
-    "القليوبية",
-    "الغربية",
-    "المنوفية",
-    "البحيرة",
-    "كفر الشيخ",
-    "الشرقية",
-    "بني سويف",
-    "الفيوم",
-    "المنيا",
-    "أسيوط",
-    "سوهاج",
-    "قنا",
-    "الأقصر",
-    "أسوان",
-    "البحر الأحمر",
-    "مطروح",
-    "الوادي الجديد",
-    "شمال سيناء",
-    "جنوب سيناء",
+    "القاهرة", "الجيزة", "الإسكندرية", "بورسعيد", "السويس", "الإسماعيلية",
+    "دمياط", "الدقهلية", "القليوبية", "الغربية", "المنوفية", "البحيرة",
+    "كفر الشيخ", "الشرقية", "بني سويف", "الفيوم", "المنيا", "أسيوط",
+    "سوهاج", "قنا", "الأقصر", "أسوان", "البحر الأحمر", "مطروح",
+    "الوادي الجديد", "شمال سيناء", "جنوب سيناء",
   ];
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.whiteColor;
+    Color appBarColor = isDark ? const Color(0xFF121212) : AppColors.primaryColor;
+    Color cardColor = isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor;
+    Color titleColor = isDark ? Colors.white : AppColors.primaryColor;
+    Color textColor = isDark ? Colors.white : AppColors.primaryDark;
+    Color hintColor = isDark ? Colors.grey[400]! : AppColors.hintTextColor;
+
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text(
           'معرفة فئة منطقتك',
           style: AppStyles.semi20Primary.copyWith(color: Colors.white),
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: appBarColor,
         centerTitle: true,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
@@ -105,7 +91,7 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
             Text(
               'اختر المحافظة',
               style: AppStyles.semi20Primary.copyWith(
-                color: AppColors.primaryColor,
+                color: titleColor,
                 fontSize: 22.sp,
               ),
               textAlign: TextAlign.center,
@@ -115,6 +101,7 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
 
             // Dropdown Card
             Card(
+              color: cardColor,
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
@@ -123,30 +110,30 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 child: DropdownButtonFormField<String>(
                   value: selectedGovernorate,
+                  dropdownColor: cardColor,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'اختر المحافظة',
                     hintStyle: AppStyles.regular16Text.copyWith(
-                      color: AppColors.hintTextColor,
+                      color: hintColor,
                     ),
                   ),
                   icon: Icon(
                     Icons.arrow_drop_down,
-                    color: AppColors.primaryColor,
+                    color: titleColor,
                     size: 32.sp,
                   ),
                   isExpanded: true,
                   style: AppStyles.regular16Text.copyWith(
-                    color: AppColors.primaryDark,
+                    color: textColor,
                   ),
-                  dropdownColor: AppColors.whiteColor,
                   items: governorates.map((String governorate) {
                     return DropdownMenuItem<String>(
                       value: governorate,
                       child: Text(
                         governorate,
                         style: AppStyles.regular16Text.copyWith(
-                          color: AppColors.primaryDark,
+                          color: textColor,
                         ),
                       ),
                     );
@@ -169,7 +156,7 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.r),
                 ),
-                color: AppColors.whiteColor,
+                color: cardColor,
                 child: Padding(
                   padding: EdgeInsets.all(24.w),
                   child: Column(
@@ -177,7 +164,7 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
                       Text(
                         'الفئة',
                         style: AppStyles.semi16TextWhite.copyWith(
-                          color: AppColors.primaryColor,
+                          color: titleColor,
                           fontSize: 18.sp,
                         ),
                       ),
@@ -212,7 +199,7 @@ class _ZoneCheckScreenState extends State<ZoneCheckScreen> {
             Text(
               'دليلك للإيجار',
               style: AppStyles.semi16TextWhite.copyWith(
-                color: AppColors.primaryColor,
+                color: titleColor,
                 fontSize: 18.sp,
               ),
               textAlign: TextAlign.center,

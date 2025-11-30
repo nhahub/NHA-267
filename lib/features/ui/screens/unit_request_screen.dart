@@ -20,16 +20,25 @@ class UnitRequestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.whiteColor;
+    Color appBarColor = isDark ? const Color(0xFF121212) : AppColors.primaryColor;
+    Color cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    Color titleColor = isDark ? Colors.white : AppColors.primaryColor;
+    Color textColor = isDark ? Colors.grey[300]! : AppColors.primaryDark;
+
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text(
           'طلب وحدة سكنية',
-          style: AppStyles.semi20Primary.copyWith(color: AppColors.whiteColor),
+          style: AppStyles.semi20Primary.copyWith(color: Colors.white),
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: appBarColor,
         centerTitle: true,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
@@ -51,7 +60,7 @@ class UnitRequestScreen extends StatelessWidget {
             Text(
               'تقديم طلب حجز وحدة سكنية',
               style: AppStyles.semi20Primary.copyWith(
-                color: AppColors.primaryColor,
+                color: titleColor,
                 fontSize: 24.sp,
               ),
               textAlign: TextAlign.center,
@@ -63,7 +72,7 @@ class UnitRequestScreen extends StatelessWidget {
             Text(
               'يمكنك تقديم طلب للحصول على وحدة سكنية من خلال بوابة مصر الرقمية',
               style: AppStyles.regular16Text.copyWith(
-                color: AppColors.primaryDark,
+                color: textColor,
                 height: 1.6,
               ),
               textAlign: TextAlign.center,
@@ -74,6 +83,7 @@ class UnitRequestScreen extends StatelessWidget {
             // Info Card
             Card(
               elevation: 2,
+              color: cardColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),
@@ -93,17 +103,16 @@ class UnitRequestScreen extends StatelessWidget {
                         Text(
                           'معلومات هامة',
                           style: AppStyles.semi16TextWhite.copyWith(
-                            color: AppColors.primaryColor,
+                            color: titleColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: 16.h),
-                    _buildInfoItem(
-                        'يتم تقديم الطلب عبر الموقع الرسمي للحكومة المصرية'),
-                    _buildInfoItem('سيتم توجيهك إلى صفحة التقديم الرسمية'),
-                    _buildInfoItem('تأكد من توفر جميع المستندات المطلوبة'),
+                    _buildInfoItem('يتم تقديم الطلب عبر الموقع الرسمي للحكومة المصرية', textColor),
+                    _buildInfoItem('سيتم توجيهك إلى صفحة التقديم الرسمية', textColor),
+                    _buildInfoItem('تأكد من توفر جميع المستندات المطلوبة', textColor),
                   ],
                 ),
               ),
@@ -148,7 +157,7 @@ class UnitRequestScreen extends StatelessWidget {
             Text(
               'خدمة مقدمة من بوابة مصر الرقمية',
               style: AppStyles.regular14Text.copyWith(
-                color: AppColors.primaryDark.withOpacity(0.6),
+                color: textColor.withOpacity(0.6),
               ),
               textAlign: TextAlign.center,
             ),
@@ -174,7 +183,7 @@ class UnitRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoItem(String text) {
+  Widget _buildInfoItem(String text, Color textColor) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: Row(
@@ -193,7 +202,7 @@ class UnitRequestScreen extends StatelessWidget {
             child: Text(
               text,
               style: AppStyles.regular14Text.copyWith(
-                color: AppColors.primaryDark,
+                color: textColor,
                 height: 1.5,
               ),
             ),

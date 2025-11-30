@@ -10,6 +10,7 @@ import '../../screens/profile_screen.dart';
 import '../../screens/settings_screen.dart';
 import '../../widgets/custom_bottom_nav_bar.dart';
 import 'package:depi_graduation_project/core/utils/app_routes.dart';
+import '../../../../core/cache/SharedPreference.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,23 +20,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String userName = 'مستخدم';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  void _loadUserName() {
+    setState(() {
+      String? savedName = SharedPreferenceUtils.getData(key: 'name') as String?;
+      if (savedName != null) {
+        userName = savedName.split(' ').first;
+      }
+    });
+  }
 
   void _onTap(int index) {
-    // 🟦 الهوم
-    if (index == 0) {
-      return;
-    }
-
-    // 🟩 البروفايل
+    if (index == 0) return;
     if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const ProfileScreen()),
-      );
-    }
-
-    // 🟨 الإعدادات
-    else if (index == 2) {
+      ).then((_) {
+        _loadUserName();
+      });
+    } else if (index == 2) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const SettingsScreen()),
@@ -43,9 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget _buildCustomHeader() {
+  // ✅ 1. عدلنا الدالة دي عشان تاخد لون الخلفية كـ باراميتر
+  Widget _buildCustomHeader(Color backgroundColor) {
     return Container(
-      color: AppColors.whiteColor,
+      color: backgroundColor, // هنا اللون المتغير
       padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 20.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,11 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('صباح الخير',
+              Text('اهلا بيك ',
                   style: AppStyles.regular16Text.copyWith(
                     color: AppColors.primaryColor,
                   )),
-              Text('مستخدم',
+              Text(userName,
                   style: AppStyles.medium20White.copyWith(
                     color: AppColors.primaryColor,
                   )),
@@ -83,13 +95,15 @@ class _HomeScreenState extends State<HomeScreen> {
     required String title,
     required String imagePath,
     required VoidCallback onTap,
+    required Color cardColor,
+    required Color textColor,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: 16.h),
         decoration: BoxDecoration(
-          color: AppColors.whiteColor,
+          color: cardColor,
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
@@ -117,10 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   title,
                   style: AppStyles.medium18Header
-                      .copyWith(color: AppColors.fontColor),
+                      .copyWith(color: textColor),
                 ),
               ),
-              const Icon(Icons.arrow_forward_ios, size: 20),
+              Icon(Icons.arrow_forward_ios, size: 20, color: textColor), // تطبيق لون السهم
             ],
           ),
         ),
@@ -130,15 +144,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.whiteColor;
+    Color cardColor = isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor;
+    Color textColor = isDark ? Colors.white : AppColors.fontColor;
+
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  _buildCustomHeader(),
+                  _buildCustomHeader(backgroundColor),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                     child: Column(
@@ -146,6 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildServiceItem(
                           title: 'القوانين',
                           imagePath: 'assets/images/laws.png',
+                          cardColor: cardColor,
+                          textColor: textColor,
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (_) => const LawsScreen()));
@@ -154,6 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildServiceItem(
                           title: 'معرفة فئة منطقتك',
                           imagePath: 'assets/images/zone.png',
+                          cardColor: cardColor,
+                          textColor: textColor,
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -164,6 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildServiceItem(
                           title: 'طلب وحدة سكنية',
                           imagePath: 'assets/images/building.png',
+                          cardColor: cardColor,
+                          textColor: textColor,
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -172,8 +198,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                         _buildServiceItem(
-                          title: 'حساب الزيادة السنوية',
+                          title: 'حساب الإيجار الجديد',
                           imagePath: 'assets/images/increase.png',
+                          cardColor: cardColor,
+                          textColor: textColor,
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -191,8 +219,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
-      // 🟦 هنا أهم تغيير
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: 0,
         onTap: _onTap,

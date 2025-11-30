@@ -11,16 +11,27 @@ class LawsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.whiteColor;
+    Color appBarColor = isDark ? const Color(0xFF121212) : AppColors.primaryColor;
+    Color cardColor = isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor;
+    Color titleColor = isDark ? Colors.white : AppColors.primaryColor;
+    Color textColor = isDark ? Colors.grey[300]! : AppColors.primaryDark;
+
+    Color expandedColor = isDark ? const Color(0xFF2C2C2C) : AppColors.primaryColor.withOpacity(0.05);
+
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text(
           'قانون الإيجار',
           style: AppStyles.semi20Primary.copyWith(color: Colors.white),
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: appBarColor,
         centerTitle: true,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.w),
@@ -36,6 +47,10 @@ class LawsScreen extends StatelessWidget {
                 'إذا كان المستأجر شخصًا طبيعيًا',
                 'العقود المُبرمة وفقًا للقانونين: 49 لسنة 1977 و136 لسنة 1981',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -46,6 +61,10 @@ class LawsScreen extends StatelessWidget {
                 'عقود الإيجار غير السكنية تنتهي بعد 5 سنوات من بدء تطبيق القانون',
                 'يجوز إنهاء العقد قبل هذه المدة إذا اتفق الطرفان',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -56,6 +75,10 @@ class LawsScreen extends StatelessWidget {
                 'يتم التقسيم بناءً على: موقع المنطقة، نوعية المباني، توافر المرافق، حالة الطرق والخدمات، القيمة الإيجارية لعقارات مشابهة',
                 'تنتهي اللجان من عملها خلال 3 أشهر ويمكن التمديد مرة واحدة',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -68,6 +91,10 @@ class LawsScreen extends StatelessWidget {
                 'لحين انتهاء عمل اللجان: دفع مبلغ مؤقت 250 جنيه شهريًا',
                 'بعد قرار المحافظ: حساب الفرق ودفعه على أقساط',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -76,6 +103,10 @@ class LawsScreen extends StatelessWidget {
               points: [
                 'تصبح 5 أضعاف القيمة القانونية الحالية',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -84,6 +115,10 @@ class LawsScreen extends StatelessWidget {
               points: [
                 'تزداد الإيجارات سنويًا بنسبة 15%',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -95,6 +130,10 @@ class LawsScreen extends StatelessWidget {
                 'إذا كان لدى المستأجر وحدة أخرى مناسبة',
                 'في حالة الرفض: يحق للمالك طلب الإخلاء من قاضي الأمور الوقتية',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -106,6 +145,10 @@ class LawsScreen extends StatelessWidget {
                 'الأولوية للفئات المستحقة للدعم',
                 'تضع الدولة الشروط والإجراءات بقرار من رئيس الوزراء',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 12.h),
             _buildArticleCard(
@@ -117,6 +160,10 @@ class LawsScreen extends StatelessWidget {
                 'القانون 136 لسنة 1981',
                 'القانون 6 لسنة 1997',
               ],
+              cardColor: cardColor,
+              titleColor: titleColor,
+              textColor: textColor,
+              expandedColor: expandedColor,
             ),
             SizedBox(height: 20.h),
           ],
@@ -145,10 +192,15 @@ class LawsScreen extends StatelessWidget {
     required String articleNumber,
     required String title,
     required List<String> points,
+    required Color cardColor,
+    required Color titleColor,
+    required Color textColor,
+    required Color expandedColor,
   }) {
     return Card(
       elevation: 2,
       margin: EdgeInsets.only(bottom: 12.h),
+      color: cardColor, // ✅ لون الكارت
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.r),
       ),
@@ -157,9 +209,11 @@ class LawsScreen extends StatelessWidget {
         child: ExpansionTile(
           tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           childrenPadding:
-              EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          backgroundColor: AppColors.primaryColor.withOpacity(0.05),
-          collapsedBackgroundColor: AppColors.whiteColor,
+          EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          backgroundColor: expandedColor,
+          collapsedBackgroundColor: cardColor,
+          iconColor: titleColor,
+          collapsedIconColor: titleColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
@@ -187,7 +241,7 @@ class LawsScreen extends StatelessWidget {
                 child: Text(
                   title,
                   style: AppStyles.semi16TextWhite.copyWith(
-                    color: AppColors.primaryColor,
+                    color: titleColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -226,7 +280,7 @@ class LawsScreen extends StatelessWidget {
                         child: Text(
                           point,
                           style: AppStyles.regular14Text.copyWith(
-                            color: AppColors.primaryDark,
+                            color: textColor,
                             height: 1.5,
                           ),
                         ),

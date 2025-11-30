@@ -42,25 +42,17 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
     }
 
     double currentRent = double.tryParse(currentRentController.text) ?? 0;
-
     double newRent = 0;
 
-    // حساب الإيجار الجديد حسب القانون المصري
     if (selectedAreaType == 'منطقة متميزة') {
       newRent = currentRent * 20;
-      if (newRent < 1000) {
-        newRent = 1000;
-      }
+      if (newRent < 1000) newRent = 1000;
     } else if (selectedAreaType == 'منطقة متوسطة') {
       newRent = currentRent * 10;
-      if (newRent < 400) {
-        newRent = 400;
-      }
+      if (newRent < 400) newRent = 400;
     } else if (selectedAreaType == 'منطقة اقتصادية') {
       newRent = currentRent * 10;
-      if (newRent < 250) {
-        newRent = 250;
-      }
+      if (newRent < 250) newRent = 250;
     }
 
     setState(() {
@@ -76,16 +68,27 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Color backgroundColor = isDark ? const Color(0xFF121212) : AppColors.whiteColor;
+    Color cardColor = isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor;
+    Color textColor = isDark ? Colors.white : AppColors.primaryDark;
+    Color hintColor = isDark ? Colors.grey[400]! : AppColors.hintTextColor;
+    Color iconColor = isDark ? Colors.white : AppColors.primaryColor;
+    Color appBarColor = isDark ? const Color(0xFF121212) : AppColors.primaryColor;
+    Color inputFillColor = isDark ? const Color(0xFF2C2C2C) : AppColors.whiteColor;
+
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text(
           'حساب الإيجار الجديد',
           style: AppStyles.semi20Primary.copyWith(color: Colors.white),
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: appBarColor,
         centerTitle: true,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
@@ -98,7 +101,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
             Text(
               'احسب الإيجار الجديد وفقًا للقانون المصري',
               style: AppStyles.semi20Primary.copyWith(
-                color: AppColors.primaryColor,
+                color: isDark ? AppColors.primaryColor : AppColors.primaryColor,
                 fontSize: 22.sp,
               ),
               textAlign: TextAlign.center,
@@ -106,8 +109,9 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
 
             SizedBox(height: 32.h),
 
-            // Area Type Dropdown Card
+
             Card(
+              color: cardColor,
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
@@ -116,42 +120,34 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 child: DropdownButtonFormField<String>(
                   value: selectedAreaType,
+                  dropdownColor: cardColor,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'نوع المنطقة',
-                    labelStyle: AppStyles.regular14Text.copyWith(
-                      color: AppColors.primaryColor,
-                    ),
+                    labelStyle: AppStyles.regular14Text.copyWith(color: iconColor),
                     hintText: 'اختر نوع المنطقة',
-                    hintStyle: AppStyles.regular16Text.copyWith(
-                      color: AppColors.hintTextColor,
-                    ),
+                    hintStyle: AppStyles.regular16Text.copyWith(color: hintColor),
                   ),
                   icon: Icon(
                     Icons.arrow_drop_down,
-                    color: AppColors.primaryColor,
+                    color: iconColor,
                     size: 32.sp,
                   ),
                   isExpanded: true,
-                  style: AppStyles.regular16Text.copyWith(
-                    color: AppColors.primaryDark,
-                  ),
-                  dropdownColor: AppColors.whiteColor,
+                  style: AppStyles.regular16Text.copyWith(color: textColor),
                   items: areaTypes.map((String areaType) {
                     return DropdownMenuItem<String>(
                       value: areaType,
                       child: Text(
                         areaType,
-                        style: AppStyles.regular16Text.copyWith(
-                          color: AppColors.primaryDark,
-                        ),
+                        style: AppStyles.regular16Text.copyWith(color: textColor),
                       ),
                     );
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
                       selectedAreaType = newValue;
-                      calculatedRent = null; // Reset calculation
+                      calculatedRent = null;
                     });
                   },
                 ),
@@ -160,8 +156,9 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
 
             SizedBox(height: 20.h),
 
-            // Current Rent Input Card
+
             Card(
+              color: cardColor,
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
@@ -171,27 +168,21 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                 child: TextField(
                   controller: currentRentController,
                   keyboardType: TextInputType.number,
-                  style: AppStyles.regular16Text.copyWith(
-                    color: AppColors.primaryDark,
-                  ),
+                  style: AppStyles.regular16Text.copyWith(color: textColor),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'الإيجار الحالي (جنيه)',
-                    labelStyle: AppStyles.regular14Text.copyWith(
-                      color: AppColors.primaryColor,
-                    ),
+                    labelStyle: AppStyles.regular14Text.copyWith(color: iconColor),
                     hintText: 'أدخل قيمة الإيجار الحالي',
-                    hintStyle: AppStyles.regular16Text.copyWith(
-                      color: AppColors.hintTextColor,
-                    ),
+                    hintStyle: AppStyles.regular16Text.copyWith(color: hintColor),
                     prefixIcon: Icon(
                       Icons.attach_money,
-                      color: AppColors.primaryColor,
+                      color: iconColor,
                     ),
                   ),
                   onChanged: (value) {
                     setState(() {
-                      calculatedRent = null; // Reset calculation
+                      calculatedRent = null;
                     });
                   },
                 ),
@@ -229,6 +220,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                 opacity: calculatedRent != null ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 500),
                 child: Card(
+                  color: cardColor,
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.r),
@@ -243,7 +235,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                       borderRadius: BorderRadius.circular(16.r),
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.primaryColor.withOpacity(0.05),
+                          AppColors.primaryColor.withOpacity(0.1),
                           AppColors.primaryColor.withOpacity(0.02),
                         ],
                         begin: Alignment.topCenter,
@@ -261,7 +253,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                         Text(
                           'الإيجار الجديد',
                           style: AppStyles.regular16Text.copyWith(
-                            color: AppColors.primaryDark,
+                            color: textColor,
                             fontSize: 18.sp,
                           ),
                         ),
@@ -283,7 +275,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                         Text(
                           'تم الحساب وفقًا للمادة 4 من قانون الإيجار المصري',
                           style: AppStyles.regular14Text.copyWith(
-                            color: AppColors.primaryDark.withOpacity(0.7),
+                            color: textColor.withOpacity(0.7),
                             fontSize: 13.sp,
                           ),
                           textAlign: TextAlign.center,
@@ -299,7 +291,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
             // Info Card
             Card(
               elevation: 2,
-              color: AppColors.primaryColor.withOpacity(0.05),
+              color: isDark ? const Color(0xFF2C2C2C) : AppColors.primaryColor.withOpacity(0.05),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -326,12 +318,9 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
                       ],
                     ),
                     SizedBox(height: 12.h),
-                    _buildInfoPoint(
-                        'منطقة متميزة: الإيجار × 20 (الحد الأدنى 1000 جنيه)'), //da
-                    _buildInfoPoint(
-                        'منطقة متوسطة: الإيجار × 10 (الحد الأدنى 400 جنيه)'),
-                    _buildInfoPoint(
-                        'منطقة اقتصادية: الإيجار × 10 (الحد الأدنى 250 جنيه)'),
+                    _buildInfoPoint('منطقة متميزة: الإيجار × 20 (الحد الأدنى 1000 جنيه)', textColor),
+                    _buildInfoPoint('منطقة متوسطة: الإيجار × 10 (الحد الأدنى 400 جنيه)', textColor),
+                    _buildInfoPoint('منطقة اقتصادية: الإيجار × 10 (الحد الأدنى 250 جنيه)', textColor),
                   ],
                 ),
               ),
@@ -342,7 +331,8 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
     );
   }
 
-  Widget _buildInfoPoint(String text) {
+  // عدلنا الدالة عشان تاخد اللون
+  Widget _buildInfoPoint(String text, Color textColor) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Row(
@@ -361,7 +351,7 @@ class _AnnualIncreaseScreenState extends State<AnnualIncreaseScreen> {
             child: Text(
               text,
               style: AppStyles.regular14Text.copyWith(
-                color: AppColors.primaryDark,
+                color: textColor.withOpacity(0.9), // ✅ استخدام اللون المتغير
                 height: 1.5,
               ),
             ),

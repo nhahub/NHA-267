@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
+import '../../../core/cache/SharedPreference.dart'; // تأكد من المسار
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_styles.dart';
 import '../../../core/utils/app_routes.dart';
 
-class ProfileScreen extends StatelessWidget {
-  final String fullName = 'حمد محمد علي محمد';
-  final String registrationNumber = '01204193836';
-  final String email = 'moharned12323@gmail.com';
-
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String fullName = "جاري التحميل...";
+  String registrationNumber = "";
+  String email = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  void _loadUserData() async {
+    var debugName = SharedPreferenceUtils.getData(key: 'name');
+    print("Profile Screen Loaded Name: $debugName");
+    setState(() {
+      fullName = SharedPreferenceUtils.getData(key: 'name') as String? ?? "مستخدم";
+      email = SharedPreferenceUtils.getData(key: 'email') as String? ?? "لا يوجد بريد";
+      registrationNumber = SharedPreferenceUtils.getData(key: 'phone') as String? ?? "لا يوجد رقم";
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +43,14 @@ class ProfileScreen extends StatelessWidget {
           style: AppStyles.semi20Primary.copyWith(color: AppColors.whiteColor),
         ),
         backgroundColor: AppColors.primaryColor,
-        // 💡 حل مشكلة زر الرجوع: تحديد لون الأيقونة ليكون أبيضًا
         iconTheme: const IconThemeData(color: AppColors.whiteColor),
+
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Instant Book Header
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, AppRoutes.settingsRoute);
@@ -49,10 +72,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            // Full Name Field
+
             Text(
               'الاسم الكامل',
-              style: AppStyles.semi16TextWhite,
+              style: AppStyles.semi16TextWhite.copyWith(color: Colors.black), // تعديل اللون ليظهر
             ),
             const SizedBox(height: 8),
             Container(
@@ -69,10 +92,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            // Registration Number Field
+
             Text(
               'الرقم المسجل',
-              style: AppStyles.semi16TextWhite,
+              style: AppStyles.semi16TextWhite.copyWith(color: Colors.black),
             ),
             const SizedBox(height: 8),
             Container(
@@ -89,10 +112,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            // Email Field
+
             Text(
               'الايميل',
-              style: AppStyles.semi16TextWhite,
+              style: AppStyles.semi16TextWhite.copyWith(color: Colors.black),
             ),
             const SizedBox(height: 8),
             Container(

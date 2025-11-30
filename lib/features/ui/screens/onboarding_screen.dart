@@ -4,7 +4,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../utils/constants.dart';
 
 import '../../../core/models/onboarding_model.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // 💡 إضافة ScreenUtil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -50,17 +50,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  // 💡 استخدام ScreenUtil للمقاسات الديناميكية
   Widget _buildOnboardingPage(OnboardingModel model) {
     return Column(
-      // 💡 التوسيط لأعلى قليلاً لترك مساحة للمنحنى الأبيض
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        // مسافة علوية لضبط المحاذاة بعد زر التخطي
         SizedBox(height: 50.h),
 
-        // الصورة
-        // نستخدم Expanded مع نسبة flex لتحديد أبعاد الصورة بشكل صحيح
         Expanded(
           flex: 5,
           child: Padding(
@@ -72,7 +67,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
 
-        // العنوان
         Text(
           model.title,
           textAlign: TextAlign.center,
@@ -84,7 +78,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         SizedBox(height: 10.h),
 
-        // الوصف
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: Text(
@@ -96,7 +89,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
         ),
-        // 💡 هذه المسافة يجب أن تكون كافية لتجنب تداخل الكلام مع المنحنى الأبيض
         SizedBox(height: 140.h),
       ],
     );
@@ -104,8 +96,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ارتفاع الـ Curve ثابت
-    const curveHeight = 150.0; // تقليل الارتفاع لتحرير مساحة أكبر
+    const curveHeight = 150.0;
 
     const bottomPosition = 0.0;
     const hiddenPosition = -curveHeight;
@@ -114,7 +105,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // 💡 1. PageView: يتم وضع الشرائح هنا
           PageView.builder(
             controller: _pageController,
             itemCount: onboardingData.length,
@@ -123,7 +113,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
           ),
 
-          // 💡 زر التخطي (ثابت في أعلى الـ Stack)
           Positioned(
             top: 40.h,
             right: 15.w,
@@ -143,7 +132,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
 
 
-          // 💡 2. Curve والـ Indicator والأزرار (في الأسفل)
           AnimatedPositioned(
             duration: kAnimationDuration,
             curve: Curves.easeOut,
@@ -159,7 +147,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // 💡 مؤشر الصفحة (Page Indicator)
                       SmoothPageIndicator(
                         controller: _pageController,
                         count: onboardingData.length,
@@ -174,7 +161,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                       SizedBox(height: 15.h),
 
-                      // 💡 زر "التالي" / "ابدأ"
                       ElevatedButton(
                         onPressed: () {
                           if (_currentPageIndex == onboardingData.length - 1) {
@@ -205,7 +191,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                       ),
 
-                      // 💡 مسافة سفلية
                       SizedBox(height: 15.h),
                     ],
                   ),
@@ -219,14 +204,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// CustomPainter لرسم المنحنى الأبيض (لا تغيير)
 class BottomCurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.white;
     final path = Path();
 
-    // 💡 تعديل نقطة البداية والنهاية للمنحنى
     path.moveTo(0, size.height * 0.2);
     path.quadraticBezierTo(
       size.width / 2, 0, size.width, size.height * 0.2,
