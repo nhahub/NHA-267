@@ -14,7 +14,7 @@ class RegisterViewModel extends Cubit<RegisterStates> {
       : super(RegisterInitialState());
 
   //todo : hold data - handle logic
-  TextEditingController fullNameController = TextEditingController(text :"انا احمد");
+  TextEditingController fullNameController = TextEditingController(text :"عمر احمد");
   TextEditingController phoneController = TextEditingController(text:"01234567890");
   TextEditingController emailController = TextEditingController(text: "test.test@gmail.com");
   TextEditingController passwordController = TextEditingController(text: "123@#%^&ahmed");
