@@ -4,8 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="depi_graduation_project"
-        android:icon="@mipmap/ic_launcher"
+        android:label="دليلك للإيجار"
+        android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">  <activity
         android:name=".MainActivity"
         android:exported="true"
